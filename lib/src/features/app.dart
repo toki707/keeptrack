@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show MaterialApp;
-import 'package:keeptrack/src/features/circuits/presentation/circuit_list/circuits_list_screen.dart';
+import 'package:keeptrack/src/features/user/presentation/user_home/user_home_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CircuitsListScreen(),
+      home: UserHomeScreen(),
     );
   }
 }
