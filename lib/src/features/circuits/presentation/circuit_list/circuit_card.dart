@@ -10,7 +10,12 @@ class CircuitCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.black12,
-      child: Column(children: [Center(child: Text(circuit.name!))]),
+      child: Column(
+        children: [
+          Center(child: Text(circuit.name!)),
+          Text(circuit.country!),
+        ],
+      ),
     );
   }
 }
