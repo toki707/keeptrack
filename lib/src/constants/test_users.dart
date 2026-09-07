@@ -18,7 +18,12 @@ List<User> testUsers = [
           preview: "assets/images/tracks/previews/monza.png",
           outline: "assets/images/tracks/outlines/monza.png",
         ),
-        voiture: Voiture(id: "1", name: "Mclaren P1"),
+        voiture: Voiture(
+          id: "1",
+          name: "Mclaren P1",
+          preview: "assets/images/cars/previews/ks_mclaren_p1.jpg",
+          brand: "Mclaren"
+        ),
         temps: ["1:31.245", "1:32.055", "1:31.789", "1:31.583"],
       ),
       Performance(
@@ -31,7 +36,12 @@ List<User> testUsers = [
           preview: "assets/images/tracks/previews/spa.png",
           outline: "assets/images/tracks/outlines/spa.png",
         ),
-        voiture: Voiture(id: "2", name: "Ferrari F2004"),
+        voiture: Voiture(
+          id: "2",
+          name: "Ferrari F2004",
+          preview: "assets/images/cars/previews/ks_ferrari_f2004.jpg",
+          brand: "Ferrari"
+        ),
         temps: ["1:42.987", "1:41.234", "1:43.501", "1:41.890"],
       ),
     ],

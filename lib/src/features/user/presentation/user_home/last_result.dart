@@ -9,7 +9,7 @@ class LastResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 350,
+      width: 500,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 131, 131, 131),
         borderRadius: BorderRadius.circular(10),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:keeptrack/src/common_widget/app_widget.dart';
 import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/last_result.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/last_track_driven.dart';
@@ -33,56 +33,7 @@ class UserHomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () => context.go('/'),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: 9),
-                    color: const Color.fromARGB(255, 131, 131, 131),
-                    child: Text(
-                      "Home",
-                      style: TextStyle(
-                        fontFamily: "D3Euronism",
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => context.go('/list'),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: 9),
-                    color: const Color.fromARGB(255, 131, 131, 131),
-                    child: Text(
-                      "Circuits",
-                      style: TextStyle(
-                        fontFamily: "D3Euronism",
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: 9),
-                    color: const Color.fromARGB(255, 131, 131, 131),
-                    child: Text(
-                      "profil",
-                      style: TextStyle(
-                        fontFamily: "D3Euronism",
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            NavPage(),
             SizedBox(height: 20),
             Divider(color: Colors.white, thickness: 2),
             Text(

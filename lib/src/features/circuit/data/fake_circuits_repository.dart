@@ -7,10 +7,13 @@ class FakeCircuitsRepository {
   List<Circuit> getCircuitsList() {
     return _circuits;
   }
+
+  Circuit getCircuitById(String circuitId) {
+    final circuit = _circuits.firstWhere((circuit) => circuit.id == circuitId);
+    return circuit;
+  }
 }
 
 final fakeCircuitsRepositoryProvider = Provider<FakeCircuitsRepository>((ref) {
   return FakeCircuitsRepository();
 });
-
-

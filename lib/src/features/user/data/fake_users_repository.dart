@@ -8,6 +8,12 @@ class FakeUsersRepository {
   List<User> getUsersList() {
     return _users;
   }
+
+  User getUserById(String userId) {
+    final user = _users.firstWhere((user) => user.id == userId);
+
+    return user;
+  }
 }
 
 final fakeUsersRepositoryProvider = Provider<FakeUsersRepository>((ref) {
