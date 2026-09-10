@@ -6,4 +6,16 @@ class User {
   final List<Performance> performances;
 
   User({required this.id, required this.name, required this.performances});
+
+  User copy({
+    String? id,
+    String? name,
+    List<Performance>? performances,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      performances: performances ?? this.performances,
+    );
+  }
 }

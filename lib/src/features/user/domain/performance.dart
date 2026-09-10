@@ -6,6 +6,18 @@ class Performance {
   final Voiture voiture;
   final List<String> temps;
 
+  Performance copy({
+    Circuit? circuit,
+    Voiture? voiture,
+    List<String>? temps,
+  }) {
+    return Performance(
+      circuit: circuit ?? this.circuit,
+      voiture: voiture ?? this.voiture,
+      temps: temps ?? this.temps,
+    );
+  }
+
   Performance({
     required this.circuit,
     required this.voiture,

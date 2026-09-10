@@ -195,7 +195,6 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
                           child: TextField(
                             controller: _tempsControllers[index],
                             style: TextStyle(color: Colors.white),
-                            keyboardType: TextInputType.datetime,
                             decoration: InputDecoration(
                               hintText: "ex: 1:23.456",
                               hintStyle: TextStyle(color: Colors.white54),
@@ -215,17 +214,7 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
 
                 SizedBox(height: 30),
 
-                
-                ElevatedButton(
-                  onPressed: () {
-                    // Récupère les temps saisis (on ignore les champs vides)
-                    final tempsList = _tempsControllers
-                        .map((c) => c.text.trim())
-                        .where((t) => t.isNotEmpty)
-                        .toList();
-                  },
-                  child: Text("Valider"),
-                ),
+                ElevatedButton(onPressed: () {}, child: Text("Valider")),
 
                 SizedBox(height: 20),
               ],
