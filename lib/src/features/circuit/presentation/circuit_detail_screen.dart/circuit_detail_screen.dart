@@ -4,11 +4,7 @@ import 'package:keeptrack/src/features/circuit/data/fake_circuits_repository.dar
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/car_result_card.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/circuit_infos.dart';
 import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
-import 'package:keeptrack/src/features/voiture/data/fake_voitures_repository.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/bottom_sheet_add_voiture.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/car_result_card.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/circuit_infos.dart';
-import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
 
 class CircuitDetailScreen extends ConsumerWidget {
   const new(this.circuitId, {super.key});
