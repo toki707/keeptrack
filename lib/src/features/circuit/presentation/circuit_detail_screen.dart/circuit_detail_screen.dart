@@ -16,8 +16,8 @@ class CircuitDetailScreen extends ConsumerWidget {
     final circuitRepository = ref.watch(fakeCircuitsRepositoryProvider);
     final circuit = circuitRepository.getCircuitById(circuitId);
 
-    final userRepoistory = ref.watch(fakeUsersRepositoryProvider);
-    final currentUser = userRepoistory.getUserById("1");
+    final userReposistory = ref.watch(fakeUsersRepositoryProvider);
+    final currentUser = userReposistory.getUserById("1");
     final performance = currentUser.performances.firstWhere(
       (performance) => performance.circuit.id == circuit.id,
     );
@@ -25,12 +25,20 @@ class CircuitDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 39, 39, 39),
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: Colors.transparent,
         centerTitle: true,
         title: Column(
           children: [
             SizedBox(height: 10),
-            Image.asset("assets/images/KeepTrack_logo.png", width: 200),
+            Text(
+              circuit.name,
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: "D3Euronism",
+                fontSize: 30,
+              ),
+            ),
             SizedBox(
               width: 148,
               child: Divider(color: Colors.white, thickness: 2),
@@ -103,7 +111,7 @@ class CircuitDetailScreen extends ConsumerWidget {
                         showModalBottomSheet<void>(
                           context: context,
                           builder: (BuildContext context) {
-                            return BottomSheetAddVoiture();
+                            return BottomSheetAddVoiture(currentUser);
                           },
                         );
                       },

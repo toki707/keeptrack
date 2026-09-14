@@ -21,7 +21,7 @@ class LastTrackDriven extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  width: 180,
+                  width: 300, //300pc | 180tel
                   height: 150,
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 131, 131, 131),

@@ -46,7 +46,7 @@ class UserHomeScreen extends ConsumerWidget {
             SizedBox(height: 70),
             Divider(color: Colors.white, thickness: 2),
             Text(
-              "Dernier Resultat",
+              "Dernier Circuits roules",
               style: TextStyle(fontFamily: "D3Euronism", color: Colors.white),
             ),
             Divider(color: Colors.white, thickness: 2),

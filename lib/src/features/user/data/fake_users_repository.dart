@@ -14,6 +14,10 @@ class FakeUsersRepository {
 
     return user;
   }
+
+  void addUserPerformance(String userId){
+
+  }
 }
 
 final fakeUsersRepositoryProvider = Provider<FakeUsersRepository>((ref) {

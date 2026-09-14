@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:keeptrack/src/features/user/domain/user.dart';
 import 'package:keeptrack/src/features/voiture/data/fake_voitures_repository.dart';
 
 class BottomSheetAddVoiture extends ConsumerStatefulWidget {
-  const new({super.key});
+  const new(this.user, {super.key});
+
+final User user;
 
   @override
   ConsumerState<BottomSheetAddVoiture> createState() =>
@@ -13,23 +16,6 @@ class BottomSheetAddVoiture extends ConsumerStatefulWidget {
 class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
   String? selectedBrand;
   String? selectedVoiture;
-  final List<TextEditingController> _tempsControllers = [
-    TextEditingController(),
-  ];
-
-  void _ajouterTemps() {
-    setState(() {
-      _tempsControllers.add(TextEditingController());
-    });
-  }
-
-  @override
-  void dispose() {
-    for (final controller in _tempsControllers) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +46,9 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
     List<DropdownMenuEntry<String>> voitureEntries = voitures
         .where((voiture) => voiture.brand == selectedBrand)
         .map(
-          (v) => DropdownMenuEntry(
-            value: v.name, // adapte selon le champ qui identifie ta voiture (ex: v.model)
-            label: v.name,
+          (voiture) => DropdownMenuEntry(
+            value: voiture.name,
+            label: voiture.name,
             style: MenuItemButton.styleFrom(
               textStyle: TextStyle(fontFamily: "D3Euronism"),
               foregroundColor: Colors.white,
@@ -75,7 +61,10 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
       height: 900,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 39, 39, 39),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
       ),
       child: ListView(
         children: [
@@ -165,56 +154,26 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
                 ),
 
                 SizedBox(height: 30),
-
                 Row(
-                  mainAxisAlignment: .start,
                   children: [
                     Text(
-                      "Temps :",
+                      "Temps",
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: "D3Euronism",
-                        fontSize: 18,
+                        fontSize: 20,
                       ),
                     ),
                     Expanded(child: SizedBox(width: 0)),
                     IconButton(
+                      onPressed: () {},
                       icon: Icon(Icons.add, color: Colors.white),
-                      onPressed: _ajouterTemps,
                     ),
                   ],
                 ),
-                Divider(thickness: 2.0, color: Colors.white),
-
-                ...List.generate(_tempsControllers.length, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _tempsControllers[index],
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              hintText: "ex: 1:23.456",
-                              hintStyle: TextStyle(color: Colors.white54),
-                              labelText: "Tour ${index + 1}",
-                              labelStyle: TextStyle(color: Colors.white70),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white38),
-                              ),
-                            ),
-                          ),
-                        ),
-                        // on garde toujours au moins un champ visible
-                      ],
-                    ),
-                  );
-                }),
-
                 SizedBox(height: 30),
 
-                ElevatedButton(onPressed: () {}, child: Text("Valider")),
+                ElevatedButton(onPressed: () {}, child: Text("Ajouter")),
 
                 SizedBox(height: 20),
               ],
