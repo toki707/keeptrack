@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 
 class CircuitInfos extends StatelessWidget {
-  const new({
-    super.key,
-    required this.circuit,
-  });
+  const new({super.key, required this.circuit});
 
   final Circuit circuit;
 
@@ -14,128 +11,79 @@ class CircuitInfos extends StatelessWidget {
     return Container(
       width: 500,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 131, 131, 131),
+        color: const Color.fromARGB(91, 62, 62, 62),
         borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color.fromARGB(100, 98, 98, 98),
+          width: 2,
+        ),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Longueur",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "D3Euronism",
-                      fontSize: 11,
-                    ),
+            Row(
+              children: [
+                Text(
+                  "Info :",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "D3Euronism",
+                    fontSize: 19,
                   ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Container(color: Colors.white, height: 2),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    circuit.lengthKm!,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "D3Euronism",
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-    
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Annee de creation",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "D3Euronism",
-                      fontSize: 11,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Container(color: Colors.white, height: 2),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    "${circuit.yearCreation!}",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "D3Euronism",
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
+            Divider(
+              thickness: 2,
+              color: const Color.fromARGB(112, 114, 114, 114),
             ),
-    
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Point culminant",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "D3Euronism",
-                      fontSize: 11,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Container(color: Colors.white, height: 2),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    circuit.highestPoint!,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "D3Euronism",
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(135, 129, 129, 129),
+                ),
+                borderRadius: BorderRadius.circular(15),
+                color: const Color.fromARGB(53, 0, 0, 0),
               ),
+              child: Image.asset(circuit.outline!),
             ),
-    
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Point le plus bas",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "D3Euronism",
-                      fontSize: 11,
+
+            Row(
+              mainAxisAlignment: .spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  mainAxisAlignment: .center,
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(
+                      "Info :",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "D3Euronism",
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Container(color: Colors.white, height: 2),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    circuit.lowestPoint!,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "D3Euronism",
-                      fontSize: 11,
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: .center,
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(
+                      "Info :",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "D3Euronism",
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),

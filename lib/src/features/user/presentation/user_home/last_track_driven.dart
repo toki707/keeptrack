@@ -13,72 +13,89 @@ class LastTrackDriven extends StatelessWidget {
       onTap: () =>
           context.goNamed("circuitDetail", pathParameters: {'id': circuit.id}),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Stack(
-          children: [
-            Image.asset(circuit.preview!, height: 150),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            height: 150,
+            width: 500,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 128, 0, 0),
+              border: Border.all(
+                color: const Color.fromARGB(218, 48, 48, 48),
+                width: 2,
+              ),
+            ),
+            child: Stack(
+              fit: StackFit.expand,
               children: [
+                Image.asset(
+                  circuit.preview!,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.centerLeft,
+                ),
                 Container(
-                  width: 300, //300pc | 180tel
-                  height: 150,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 131, 131, 131),
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      stops: [0.0, 0.4, 0.8],
+                      colors: [
+                        Colors.transparent,
+                        Color.fromARGB(83, 63, 2, 2),
+                        Color.fromARGB(218, 40, 0, 0),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Container(
-                      width: 40,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            "https://flagcdn.com/w160/${circuit.location}.png",
+                    SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              "https://flagcdn.com/w160/${circuit.location}.png",
+                            ),
                           ),
                         ),
-                      ),
-                      child: Expanded(child: SizedBox(width: 0)),
+                        Image.asset(circuit.outline!, height: 90),
+                      ],
                     ),
-                    Image.asset(circuit.outline!, height: 90),
-                  ],
-                ),
-                SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      circuit.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "D3Euronism",
-                        fontSize: 11,
-                      ),
-                    ),
-
-                    SizedBox(
-                      width: 120,
-                      child: Text(
-                        "${circuit.country}, ${circuit.city}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "D3Euronism",
-                          fontSize: 8,
+                    const SizedBox(width: 30),
+                    Column(
+                      mainAxisAlignment: .center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          circuit.name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: "D3Euronism",
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
+                        SizedBox(
+                          width: 120,
+                          child: Text(
+                            "${circuit.country}, ${circuit.city}",
+                            style: const TextStyle(
+                              color: Color.fromARGB(155, 255, 255, 255),
+                              fontFamily: "D3Euronism",
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

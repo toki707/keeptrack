@@ -11,8 +11,12 @@ class LastResult extends StatelessWidget {
     return Container(
       width: 500,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 131, 131, 131),
+        color: const Color.fromARGB(78, 13, 13, 13),
         borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color.fromARGB(82, 247, 247, 247),
+          width: 2,
+        ),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -21,23 +25,16 @@ class LastResult extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 85, 85, 85),
-                borderRadius: BorderRadius.circular(15),
+                color: const Color.fromARGB(40, 193, 193, 192),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            "https://flagcdn.com/w160/${currentUser.performances.last.circuit.location}.png",
-                          ),
-                        ),
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        "https://flagcdn.com/w160/${currentUser.performances.last.circuit.location}.png",
                       ),
                     ),
                     SizedBox(width: 10),
@@ -49,14 +46,15 @@ class LastResult extends StatelessWidget {
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: "D3Euronism",
+                            fontSize: 18,
                           ),
                         ),
                         Text(
                           currentUser.performances.last.circuit.country!,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: const Color.fromARGB(141, 252, 252, 252),
                             fontFamily: "D3Euronism",
-                            fontSize: 10,
+                            fontSize: 12,
                           ),
                         ),
                       ],
@@ -65,7 +63,7 @@ class LastResult extends StatelessWidget {
                     Expanded(child: SizedBox(width: 0)),
                     Image.asset(
                       currentUser.performances.last.circuit.outline!,
-                      width: 120,
+                      width: 150,
                     ),
                   ],
                 ),
@@ -82,18 +80,23 @@ class LastResult extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: "D3Euronism",
-                      fontSize: 11,
+                      fontSize: 15,
                     ),
                   ),
                   SizedBox(width: 5),
-                  Expanded(child: Container(color: Colors.white, height: 2)),
+                  Expanded(
+                    child: Container(
+                      color: const Color.fromARGB(98, 255, 255, 255),
+                      height: 2,
+                    ),
+                  ),
                   SizedBox(width: 5),
                   Text(
                     currentUser.performances.last.voiture.name,
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: "D3Euronism",
-                      fontSize: 11,
+                      fontSize: 15,
                     ),
                   ),
                 ],
@@ -109,18 +112,23 @@ class LastResult extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: "D3Euronism",
-                      fontSize: 11,
+                      fontSize: 15,
                     ),
                   ),
                   SizedBox(width: 5),
-                  Expanded(child: Container(color: Colors.white, height: 2)),
+                  Expanded(
+                    child: Container(
+                      color: const Color.fromARGB(98, 255, 255, 255),
+                      height: 2,
+                    ),
+                  ),
                   SizedBox(width: 5),
                   Text(
                     currentUser.performances.last.temps.last,
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: "D3Euronism",
-                      fontSize: 11,
+                      fontSize: 15,
                     ),
                   ),
                 ],

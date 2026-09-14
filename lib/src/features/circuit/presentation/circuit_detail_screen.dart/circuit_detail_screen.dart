@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:keeptrack/src/common_widget/aura_background.dart';
+import 'package:keeptrack/src/common_widget/my_app_bar.dart';
 import 'package:keeptrack/src/features/circuit/data/fake_circuits_repository.dart';
+import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/car_result_card.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/circuit_infos.dart';
 import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
@@ -24,104 +27,171 @@ class CircuitDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 39, 39, 39),
-      appBar: AppBar(
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Column(
-          children: [
-            SizedBox(height: 10),
-            Text(
-              circuit.name,
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: "D3Euronism",
-                fontSize: 30,
-              ),
-            ),
-            SizedBox(
-              width: 148,
-              child: Divider(color: Colors.white, thickness: 2),
-            ),
+
+      body: Container(
+        color: const Color.fromARGB(255, 38, 0, 0),
+        child: AuraBackground(
+          colors: [
+            const Color.fromARGB(99, 255, 1, 1),
+            Colors.black,
+            const Color.fromARGB(54, 204, 0, 0),
           ],
-        ),
-      ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: 55,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            "https://flagcdn.com/w160/${circuit.location}.png",
-                          ),
+          points: [Alignment.topLeft, Alignment(12, 0), Alignment.bottomCenter],
+          radiuses: [500, 100, 500],
+          child: ListView(
+            children: [
+              Column(
+                children: [
+                  Stack(
+                    children: [
+                      SizedBox(
+                        width: 500,
+                        height: 500,
+                        child: ShaderMask(
+                          shaderCallback: (Rect bounds) {
+                            return LinearGradient(
+                              begin: .topCenter,
+                              end: .bottomCenter,
+                              colors: [Colors.black, Colors.transparent],
+                              stops: [0, 1.0],
+                            ).createShader(bounds);
+                          },
+                          blendMode: BlendMode.dstIn,
+                          child: Image.asset(circuit.preview!, fit: .cover),
                         ),
                       ),
-                      child: Expanded(child: SizedBox(width: 0)),
-                    ),
-                  ],
-                ),
-                Image.asset(circuit.outline!, width: 500),
-                SizedBox(height: 12),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Info :",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "D3Euronism",
-                        fontSize: 18,
+                      Column(
+                        crossAxisAlignment: .start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: .topCenter,
+                                end: .bottomCenter,
+                                colors: [
+                                  const Color.fromARGB(190, 0, 0, 0),
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            child: MyAppBar(circuit: circuit),
+                          ),
+                          SizedBox(height: 50),
+                          TrackPres(circuit),
+                        ],
                       ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-                  ],
+                    child: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        CircuitInfos(circuit: circuit),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Temps realises :",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "D3Euronism",
+                                fontSize: 18,
+                              ),
+                            ),
+
+                            Expanded(child: SizedBox(width: 0)),
+                            IconButton(
+                              icon: Icon(Icons.add, color: Colors.white),
+                              onPressed: () {
+                                showModalBottomSheet<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return BottomSheetAddVoiture(currentUser);
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        Divider(thickness: 3.0),
+
+                        CarResultCard(performance),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TrackPres extends StatelessWidget {
+  const new(this.circuit, {super.key});
+
+  final Circuit circuit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: .start,
+
+        children: [
+          Row(
+            crossAxisAlignment: .center,
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                  "https://flagcdn.com/w160/${circuit.location}.png",
                 ),
-                Divider(thickness: 3.0),
+              ),
+              SizedBox(width: 8),
 
-                CircuitInfos(circuit: circuit),
-
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Temps realisees :",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "D3Euronism",
-                        fontSize: 18,
-                      ),
-                    ),
-
-                    Expanded(child: SizedBox(width: 0)),
-
-                    IconButton(
-                      icon: Icon(Icons.add, color: Colors.white),
-                      onPressed: () {
-                        showModalBottomSheet<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return BottomSheetAddVoiture(currentUser);
-                          },
-                        );
-                      },
-                    ),
-                  ],
+              Text(
+                circuit.name,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: "D3Euronism",
+                  fontSize: 50,
                 ),
-                Divider(thickness: 3.0),
+              ),
+            ],
+          ),
 
-                CarResultCard(performance),
-              ],
+          SizedBox(height: 4),
+
+          Text(
+            circuit.description!,
+            style: TextStyle(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              fontFamily: "D3Euronism",
+              fontSize: 30,
+            ),
+          ),
+
+          SizedBox(height: 40),
+
+          Text(
+            "${circuit.country}, ${circuit.city}",
+            style: TextStyle(
+              color: const Color.fromARGB(188, 255, 255, 255),
+              fontFamily: "D3Euronism",
+              fontSize: 20,
             ),
           ),
         ],
