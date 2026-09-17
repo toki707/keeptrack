@@ -8,6 +8,7 @@ class Voiture {
   final List<String>? tags;
   final String? classCar;
   final Specs? specs;
+  final String preview;
 
   Voiture({
     required this.id,
@@ -17,5 +18,6 @@ class Voiture {
     this.tags,
     this.classCar,
     this.specs,
+    required this.preview,
   });
 }

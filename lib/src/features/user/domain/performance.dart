@@ -1,14 +1,22 @@
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
-import 'package:keeptrack/src/features/voiture/domain/voiture.dart';
+import 'package:keeptrack/src/features/user/domain/voiture_performance.dart';
 
 class Performance {
   final Circuit circuit;
-  final Voiture voiture;
-  final List<String> temps;
+  final List<VoiturePerformance> voitures;
 
   Performance({
     required this.circuit,
-    required this.voiture,
-    required this.temps,
+    required this.voitures,
   });
+
+  Performance copyWith({
+    Circuit? circuit,
+    List<VoiturePerformance>? voitures,
+  }) {
+    return Performance(
+      circuit: circuit ?? this.circuit,
+      voitures: voitures ?? this.voitures,
+    );
+  }
 }

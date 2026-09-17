@@ -6,6 +6,7 @@ class Circuit {
   final List<String>? geotags;
   final String? country;
   final String? city;
+  final String? lengthKm;
   final String? pitboxes;
   final String? run;
   final int? yearCreation;
@@ -23,6 +24,7 @@ class Circuit {
     this.geotags,
     this.country,
     this.city,
+    this.lengthKm,
     this.pitboxes,
     this.run,
     this.yearCreation,
