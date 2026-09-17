@@ -3,14 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:keeptrack/src/common_widget/aura_background.dart';
 import 'package:keeptrack/src/common_widget/my_app_bar.dart';
 import 'package:keeptrack/src/features/circuit/data/fake_circuits_repository.dart';
-import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/car_result_card.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/circuit_infos.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/track_pres.dart';
 import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/bottom_sheet_add_voiture.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/modal_bottom_sheet/bottom_sheet_add_voiture.dart';
+import 'package:keeptrack/src/features/user/domain/voiture_performance.dart'; // ⬅️ AJOUTÉ
 
 class CircuitDetailScreen extends ConsumerWidget {
-  const new(this.circuitId, {super.key});
+  const CircuitDetailScreen(this.circuitId, {super.key});
 
   final String circuitId;
 
@@ -21,9 +22,11 @@ class CircuitDetailScreen extends ConsumerWidget {
 
     final userReposistory = ref.watch(fakeUsersRepositoryProvider);
     final currentUser = userReposistory.getUserById("1");
-    final performance = currentUser.performances.firstWhere(
-      (performance) => performance.circuit.id == circuit.id,
-    );
+
+    final List<VoiturePerformance> voituresDuCircuit = currentUser.performances
+        .where((performance) => performance.circuit.id == circuit.id)
+        .expand((performance) => performance.voitures)
+        .toList();
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 39, 39, 39),
@@ -96,7 +99,7 @@ class CircuitDetailScreen extends ConsumerWidget {
                       crossAxisAlignment: .start,
                       children: [
                         CircuitInfos(circuit: circuit),
-
+                        SizedBox(height: 40),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -108,24 +111,44 @@ class CircuitDetailScreen extends ConsumerWidget {
                                 fontSize: 18,
                               ),
                             ),
+                          ],
+                        ),
+                        Divider(thickness: 3.0),
 
-                            Expanded(child: SizedBox(width: 0)),
-                            IconButton(
+                        ...voituresDuCircuit.map(
+                          (voiturePerformance) => Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: CarResultCard(voiturePerformance),
+                          ),
+                        ),
+
+                        SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: .center,
+                          children: [
+                            IconButton.outlined(
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  Color.fromARGB(157, 241, 1, 1),
+                                ),
+                              ),
                               icon: Icon(Icons.add, color: Colors.white),
                               onPressed: () {
                                 showModalBottomSheet<void>(
                                   context: context,
+                                  backgroundColor: Colors.transparent,
+                                  barrierColor: Colors.transparent,
                                   builder: (BuildContext context) {
-                                    return BottomSheetAddVoiture(currentUser);
+                                    return BottomSheetAddVoiture(
+                                      currentUser,
+                                      circuit,
+                                    );
                                   },
                                 );
                               },
                             ),
                           ],
                         ),
-                        Divider(thickness: 3.0),
-
-                        CarResultCard(performance),
                       ],
                     ),
                   ),
@@ -134,67 +157,6 @@ class CircuitDetailScreen extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class TrackPres extends StatelessWidget {
-  const new(this.circuit, {super.key});
-
-  final Circuit circuit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: .start,
-
-        children: [
-          Row(
-            crossAxisAlignment: .center,
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  "https://flagcdn.com/w160/${circuit.location}.png",
-                ),
-              ),
-              SizedBox(width: 8),
-
-              Text(
-                circuit.name,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: "D3Euronism",
-                  fontSize: 50,
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 4),
-
-          Text(
-            circuit.description!,
-            style: TextStyle(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              fontFamily: "D3Euronism",
-              fontSize: 30,
-            ),
-          ),
-
-          SizedBox(height: 40),
-
-          Text(
-            "${circuit.country}, ${circuit.city}",
-            style: TextStyle(
-              color: const Color.fromARGB(188, 255, 255, 255),
-              fontFamily: "D3Euronism",
-              fontSize: 20,
-            ),
-          ),
-        ],
       ),
     );
   }

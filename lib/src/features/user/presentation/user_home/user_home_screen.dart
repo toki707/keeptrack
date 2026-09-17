@@ -13,7 +13,7 @@ class UserHomeScreen extends ConsumerWidget {
 
   final User? user;
   final Circuit? circuit;
-  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usersRepository = ref.watch(fakeUsersRepositoryProvider);
@@ -50,7 +50,7 @@ class UserHomeScreen extends ConsumerWidget {
                 LastResult(users.first),
                 SizedBox(height: 70),
                 Text(
-                  "Dernier Circuits roules :",
+                  "Derniers Circuits roules :",
                   style: TextStyle(
                     fontFamily: "D3Euronism",
                     color: Colors.white,

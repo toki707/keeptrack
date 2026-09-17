@@ -8,6 +8,9 @@ class LastResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lastPerformance = currentUser.performances.last;
+    final lastVoiturePerformance = lastPerformance.voitures.last;
+
     return Container(
       width: 500,
       decoration: BoxDecoration(
@@ -34,7 +37,7 @@ class LastResult extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                        "https://flagcdn.com/w160/${currentUser.performances.last.circuit.location}.png",
+                        "https://flagcdn.com/w160/${lastPerformance.circuit.location}.png",
                       ),
                     ),
                     SizedBox(width: 10),
@@ -42,7 +45,7 @@ class LastResult extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          currentUser.performances.last.circuit.name,
+                          lastPerformance.circuit.name,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: "D3Euronism",
@@ -50,7 +53,7 @@ class LastResult extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          currentUser.performances.last.circuit.country!,
+                          lastPerformance.circuit.country!,
                           style: TextStyle(
                             color: const Color.fromARGB(141, 252, 252, 252),
                             fontFamily: "D3Euronism",
@@ -61,10 +64,7 @@ class LastResult extends StatelessWidget {
                     ),
 
                     Expanded(child: SizedBox(width: 0)),
-                    Image.asset(
-                      currentUser.performances.last.circuit.outline!,
-                      width: 150,
-                    ),
+                    Image.asset(lastPerformance.circuit.outline!, width: 150),
                   ],
                 ),
               ),
@@ -92,7 +92,7 @@ class LastResult extends StatelessWidget {
                   ),
                   SizedBox(width: 5),
                   Text(
-                    currentUser.performances.last.voiture.name,
+                    lastVoiturePerformance.voiture.name,
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: "D3Euronism",
@@ -124,7 +124,7 @@ class LastResult extends StatelessWidget {
                   ),
                   SizedBox(width: 5),
                   Text(
-                    currentUser.performances.last.temps.last,
+                    lastVoiturePerformance.temps.last,
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: "D3Euronism",

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/modal_bottom_sheet/add_button.dart';
+import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
 import 'package:keeptrack/src/features/voiture/data/fake_voitures_repository.dart';
+import 'package:keeptrack/src/features/voiture/domain/voiture.dart';
 
 class BottomSheetAddVoiture extends ConsumerStatefulWidget {
-  const new(this.user, {super.key});
+  const new(this.currentUser, this.circuit, {super.key});
 
-final User user;
+  final User currentUser;
+  final Circuit circuit;
 
   @override
   ConsumerState<BottomSheetAddVoiture> createState() =>
@@ -16,6 +21,51 @@ final User user;
 class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
   String? selectedBrand;
   String? selectedVoiture;
+
+  int nombreDeTemps = 1;
+
+  final List<TextEditingController> _tempsControllers = [
+    TextEditingController(),
+  ];
+
+  void _ajouterTemps() {
+    setState(() {
+      nombreDeTemps++;
+      _tempsControllers.add(TextEditingController());
+    });
+  }
+
+  @override
+  void dispose() {
+    for (final controller in _tempsControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+void _addPerformance(List<Voiture> voitures) {
+    if (selectedBrand == null || selectedVoiture == null) return;
+
+    final tempsList = _tempsControllers
+        .map((controller) => controller.text)
+        .where((temps) => temps.isNotEmpty)
+        .toList();
+
+    if (tempsList.isEmpty) return;
+
+    final voitureSelectionnee = voitures.firstWhere(
+      (voiture) => voiture.name == selectedVoiture,
+    );
+
+    ref.read(fakeUsersRepositoryProvider).addUserPerformance(
+          userId: widget.currentUser.id,
+          circuit: widget.circuit,
+          voiture: voitureSelectionnee,
+          temps: tempsList,
+        );
+
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +110,7 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
     return Container(
       height: 900,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 39, 39, 39),
+        color: const Color.fromARGB(236, 15, 0, 0),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(25),
           topRight: Radius.circular(25),
@@ -78,11 +128,11 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
                   mainAxisAlignment: .center,
                   children: [
                     Text(
-                      "Ajouter une voiture",
+                      "Ajouter un Temp",
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: "D3Euronism",
-                        fontSize: 15,
+                        fontSize: 22,
                       ),
                     ),
                   ],
@@ -166,14 +216,38 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
                     ),
                     Expanded(child: SizedBox(width: 0)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: _ajouterTemps,
                       icon: Icon(Icons.add, color: Colors.white),
                     ),
                   ],
                 ),
+
+                ...List.generate(nombreDeTemps, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: TextFormField(
+                      controller: _tempsControllers[index],
+                      inputFormatters: [],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "D3Euronism",
+                      ),
+                      decoration: InputDecoration(
+                        hintText: "1:23.456",
+                        hintStyle: TextStyle(color: Colors.white38),
+                        labelText: "Tour ${index + 1}",
+                        labelStyle: TextStyle(color: Colors.white70),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white38),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+
                 SizedBox(height: 30),
 
-                ElevatedButton(onPressed: () {}, child: Text("Ajouter")),
+                AddButton(onPressed : () => _addPerformance(voitures)),
 
                 SizedBox(height: 20),
               ],

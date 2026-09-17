@@ -33,7 +33,7 @@ class MyAppBar extends StatelessWidget {
                         icon: const Icon(Icons.arrow_back),
                       ),
 
-                      const Spacer(),
+                      const Expanded(child: SizedBox(width: 0)),
 
                       Image.asset(
                         "assets/images/keeptrack_icon.png",
