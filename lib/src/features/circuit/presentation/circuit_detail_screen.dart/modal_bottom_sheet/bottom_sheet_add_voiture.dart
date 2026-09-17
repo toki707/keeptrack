@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/modal_bottom_sheet/add_button.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/modal_bottom_sheet/lap_time_formatter.dart';
 import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
 import 'package:keeptrack/src/features/voiture/data/fake_voitures_repository.dart';
@@ -43,7 +44,7 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
     super.dispose();
   }
 
-void _addPerformance(List<Voiture> voitures) {
+  void _addPerformance(List<Voiture> voitures) {
     if (selectedBrand == null || selectedVoiture == null) return;
 
     final tempsList = _tempsControllers
@@ -57,7 +58,9 @@ void _addPerformance(List<Voiture> voitures) {
       (voiture) => voiture.name == selectedVoiture,
     );
 
-    ref.read(fakeUsersRepositoryProvider).addUserPerformance(
+    ref
+        .read(fakeUsersRepositoryProvider)
+        .addUserPerformance(
           userId: widget.currentUser.id,
           circuit: widget.circuit,
           voiture: voitureSelectionnee,
@@ -162,7 +165,7 @@ void _addPerformance(List<Voiture> voitures) {
                   ),
                   menuStyle: MenuStyle(
                     backgroundColor: WidgetStatePropertyAll(
-                      const Color.fromARGB(255, 39, 39, 39),
+                      const Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
                   dropdownMenuEntries: brandEntries,
@@ -194,7 +197,7 @@ void _addPerformance(List<Voiture> voitures) {
                   ),
                   menuStyle: MenuStyle(
                     backgroundColor: WidgetStatePropertyAll(
-                      const Color.fromARGB(255, 39, 39, 39),
+                      const Color.fromARGB(255, 5, 5, 5),
                     ),
                   ),
                   dropdownMenuEntries: voitureEntries,
@@ -227,7 +230,7 @@ void _addPerformance(List<Voiture> voitures) {
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: TextFormField(
                       controller: _tempsControllers[index],
-                      inputFormatters: [],
+                      inputFormatters: [LapTimeFormatter()],
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: "D3Euronism",
@@ -247,7 +250,7 @@ void _addPerformance(List<Voiture> voitures) {
 
                 SizedBox(height: 30),
 
-                AddButton(onPressed : () => _addPerformance(voitures)),
+                AddButton(onPressed: () => _addPerformance(voitures)),
 
                 SizedBox(height: 20),
               ],

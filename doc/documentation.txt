@@ -1,0 +1,425 @@
+17.08.2026
+
+Pour le début de mon projet qui sera une appli qui servira à garder une trace sur les temps
+réaliser par voiture sur Assetto Corsa.
+
+Pour commencer je dois Réaliser le premier récit utiliateur qui servira à afficher la liste de tous les
+circuits sur la page d'accueil avec des petites infos de base sur le circuit
+
+Récit N°1 : Afficher la liste des cicuits
+
+	Les tâches à réaliser pour se récit sont :
+
+		- Créer un fichier JSON avec les circuits
+		- Développer un serveur NodeJS
+		- faire un figma
+		- Développer un client avec des données en locales
+		- Connecter le Client avec le Serveur
+
+	a) Créer un ficher JSON avec les circuits
+
+	J'ai commencer par créer un JSON qui ne contient pas toutes les circuits et toutes les voitures mais
+	seulement un qui contient un chantillon de quelque circuits et voitures pour pouvoir avancer plus
+	rapidement sans devoir attendre d'avoir toutes les données définitives. Le but étant simplement de
+	poser une première structure de données qui se présente comme ceci:
+
+		{
+			  "name": "Circuit de Spa-Francorchamps",
+			  "country": "Belgique",
+			  "length_km": 7.004,
+			  "fastest_car": {
+				"car": "Ferrari F1 2004",
+				"time": "1:41.234"
+			  },
+			  "cars": [
+				{
+				  "name": "Ferrari F1 2004",
+				  "times": [
+					"1:42.987",
+					"1:41.234",
+					"1:43.501",
+					"1:41.890"
+				  ]
+				},
+				{
+				  "name": "Porsche 918 Spyder",
+				  "times": [
+					"2:05.412",
+					"2:04.876",
+					"2:06.203"
+				  ]
+				},
+				{
+				  "name": "Mclaren P1",
+				  "times": [
+					"2:03.998",
+					"2:04.512",
+					"2:03.654",
+					"2:05.001"
+				  ]
+				}
+			  ]
+			},...
+			
+	Pour se JSON on peut constater que les circuits contiennent les voitures et que les voiture se seront pas
+	visible de base dans l'appli à part lors de l'ajout d'une voiture à un circuit ou lorsque l'on clique sur
+	un circuit pour voir les voitures ayant efféctuées un tour sur se dit circuit. Chaque voiture contient
+	elle même un tableau de temps, se qui va permettre par la suite de calculer facilement le meilleur temps
+	réalisé (fastest_car) sans devoir tout recalculer à chaque fois côté client.
+
+	b) Développer un serveur NodeJS
+
+	Pour le serveur, j'ai mis en place les solutions vu durant le cours du 295 pour afficher la liste des circuits,
+	en se basant sur le fichier JSON créer précédemment comme source de données pour le moment. L'idée
+	étant de mettre en place une première route qui permet simplement de récupérer la liste des circuits,
+	sans encore les détails des voitures, se qui sera fait plus tard une fois le reste avancé.
+	
+	c) Mettre en place les tests côté serveur
+
+	En suivant la méthode vue dans le module ICH-426, j'ai ajouté Jest et supertest pour tester mon serveur NodeJS.
+	J'ai créé un fichier src/db.js qui regroupe la connexion à la base etune méthode prepareDatabase() qui insère
+	mes trois circuits de test dans la collection circuits. Le fichier index.test.js utilise beforeAll pour connecter
+	et préparer la base,et afterAll pour la déconnecter. Les deux tests écrits contrôlent que la route /api/circuits
+	retourne bien un statut 200, une liste de 3 circuits, et que Spa est bien le premier élément de la liste.
+	
+	
+PREMIER SPRINT (2 semaines)
+
+Tâches à réaliser :
+	Récit 1 (afficher la page home du user):
+		--> Faire un Trello [OK]
+		--> Faire 3 JSON pour les voitures, circuits et users [OK]
+		--> Faire un moodboard [OK]
+		--> Faire un figma [OK]
+		--> Développer un Client [OK]
+		--> Documentation [OK]
+		
+	
+	Récit 2 (Ajouter une performance à un utilisateur)
+		--> Développer la page de détail d'un circuit [OK]
+		--> Développer le composant d'affichage des infos du circuit
+		--> Développer le composant d'affichage des performances (résultats par voiture)
+		--> Développer le bottom sheet permettant de sélectionner une voiture et ses temps
+		--> Connecter le bottom sheet au repository pour créer la performance liée à l'utilisateur
+		--> Formatter les champs TextFormField pour avoir le format 0:00.000
+	
+
+Après une discussion de 1 heure avec le prof, on en est arrivé à la conclusion qui faudrait diriger l'appli plus en
+direction de l'utilisateur au lieu d'avoir une appli qui ne sert que à afficher des circuits sans aucun réel intêret.
+
+
+
+RECIT 1 : AFFICHER LA PAGE HOME DU USER
+
+	Donc je me suis dit que se ne serait pas mal de pouvoir premièrement changer entièrement la 1er page qui ne servait 
+	qu'à montrer une liste de circuits et que à la place je pourrai faire une page qui montre plutôt des infos qui pourrai
+	servir à l'utilisateur telle que le dernier résultat réaliser ou les derniers circuits roulés ou le tours le plus court
+	réaliser ou le plus long et plein d'autre encore.
+
+
+			
+	Donc après longue réflexion, je me suis lancé sur 3 JSON, un pour les voitures, un pour les circuits et un 3e pour les 
+	users au lieu de d'avoir un JSON pour tous comme avant.
+
+	Exemple :
+
+		voiture :
+		
+			{
+				"name": "McLaren P1™",
+				"brand": "McLaren",
+				"description": "The astonishing new McLaren P1™ has a clear goal - to be the best driver's car in
+					the world on road and track. To achieve this objective, McLaren is using all of its 50 years of racing
+					experience and success, especially in the fields of aerodynamics and lightweight carbon fibre technology.
+					The result is a car that has an unprecedented amount of downforce for a road vehicle. Similar levels to a GT3
+					racing car and yet with even greater ground effect. This downforce not only boosts cornering and braking performance.
+					It also helps balance, stability and driveability at all speeds. The best driver's car in the world
+					must also have exceptional straight-line performance and instant throttle response. To deliver this, the McLaren
+					P1™ uses an innovative IPAS petrol-electric powertrain comprising a substantially revised 3.8-litre twin-turbo V8
+					petrol engine, coupled to a single electric motor, collectively known as M838TQ. Combined power output is 916 PS.
+					As important as absolute power is the electric motor's ability to provide instant torque, making the powertrain superbly
+					responsive. Top speed is electronically limited to 350 km/h, with the 0-100 km/h standing start acceleration
+					taking less than three seconds. The McLaren P1™ will power from rest to 200 km/h in less than seven seconds, and on to
+					300 km/h in less than 17 seconds - a full five seconds quicker than the McLaren F1.",
+				"tags": [
+					"#Hypercars",
+					"rwd",
+					"street",
+					"semiautomatic",
+					"great britain"
+				],
+				"class": "street",
+				"specs": {
+					"bhp": "903bhp",
+					"torque": "900Nm",
+					"weight": "1450kg",
+					"topspeed": "350km/h",
+					"acceleration": "2.8s 0-100",
+					"pwratio": "1.60kg/hp",
+					"range": 135
+				}
+			}
+		
+		circuit : 
+		
+			{
+				"name": "Monza",
+				"description": "Autodromo di Monza",
+				"tags": [
+				  "circuit",
+				  "original",
+				  "Italy"
+				],
+				"geotags": [
+				  "lat",
+				  "lon"
+				],
+				"country": "Italy",
+				"city": "Monza (MI)",
+				"length": "5793",
+				"width": "12",
+				"pitboxes": "26",
+				"run": "clockwise",
+				"year_creation": 1922,
+				"highest_point": "170m",
+				"lowest_point": "155m",
+				"preview": "assets/images/track/previews/monza.png",
+				"outline": "assets/images/track/outlines/monza.png"
+			}
+			
+			
+		user: 
+		
+			{
+				"name": "cp-24jon",
+				"performance": [
+					{
+						"circuit": {
+							"_id": {
+								"$oid": "6a953055c027429711fb2d3e"
+							},
+							"name": "Monza",
+							"location": "it",
+							"country": "Italie",
+							"city": "Monza (DI)",
+							"preview": "assets/images/tracks/previews/monza.png",
+							"outline": "assets/images/tracks/outlines/monza.png"
+						},
+						"voiture": {
+							"_id": {
+								"$oid": "6a9532fbc027429711fb2d42"
+							},
+							"name": "Mclaren P1"
+						},
+						"temps": [
+							"1:31.245",
+							"1:32.055",
+							"1:31.789",
+							"1:31.583"
+						]
+					}
+				]
+			}
+			
+			
+
+	Une fois toutes les données réunie et formater que voulu, je suis allé sur des site tels que Dribbble et Pintrest pour 
+	chercher des inspirations pour le nouveau look de mon appli et une fois toutes les données réunis, je les est toutes
+	coller dans un moodboard.
+	Basé sur ce moodboard, j'ai commencé le figma et une fois le figma fini, j'ai pu commecner commencer le Client.
+
+	Pour le Client je me suis basé sur les notion vu dans le 294 étant donnés que pour se sprint, aucun serveur ne doit 
+	être réaliser. 
+ 
+RECIT 2 : AJOUTER UNE PERFORMANCE A UN USER
+
+03.09.2026	
+
+	J'ai commencé par la page circuit_detail_screen.dart, qui reçoit en paramètre le circuitId
+	du circuit sélectionné depuis la liste. En suivant les notions vues dans le 294 sur
+	Riverpod, cette page est un ConsumerWidget qui va chercher le circuit correspondant via
+	fakeCircuitsRepositoryProvider, sur le même principe que le provider
+	charactersRepositoryProvider mis en place dans le cours (ref.watch + getCircuitById).
+
+	Pour le moment, l'utilisateur courant est encore récupéré en dur via
+	fakeUsersRepositoryProvider.getUserById("1"), ce qui reste temporaire jusqu'à ce que je trouve une
+	meilleur idée pour savoir comment savoir quelle user est connecter. À partir de cet utilisateur,
+	je récupère avec firstWhere() la performance correspondant au circuit affiché (même logique que la
+	recherche par id vue dans le 294).
+
+	Sur cette page, j'affiche :
+		--> le logo de l'appli et un drapeau (via l'API flagcdn, basé sur circuit.location)
+		--> l'image du tracé du circuit (outline)
+		--> une section "Info :" qui utilise le composant CircuitInfos
+		--> une section "Temps realisees :" avec un IconButton qui ouvre le bottom sheet
+		  d'ajout de voiture (showModalBottomSheet)
+		--> le composant CarResultCard qui affiche la performance actuelle
+		
+04.09.2026
+
+	a) CircuitInfos
+	J'ai créé un widget dédié pour ne pas surcharger circuit_detail_screen.dart, en suivant le
+	principe vu dans le 294 de découper l'UI en petits widgets réutilisables (comme
+	CharacterCard ou VocationCard). CircuitInfos reçoit un objet Circuit et affiche, dans un
+	container arrondi au thème sombre de l'appli, les infos suivantes sous forme de lignes
+	label / séparateur / valeur :
+		- Longueur
+		- Année de création
+		- Point culminant
+		- Point le plus bas
+
+	Chaque ligne utilise un Row avec un Expanded contenant une petite ligne blanche entre le
+	label et la valeur, pour garder une présentation cohérente avec le reste de l'appli
+	(police D3Euronism, texte blanc).
+
+	b) CarResultCard
+
+	Ce composant reçoit une Performance et affiche, dans une Card, l'image de la voiture
+	(performance.voiture.preview), son nom, ainsi que le nombre de tours réalisés
+	(performance.temps.length "Tours"). C'est ce widget qui permettra, une fois plusieurs
+	performances existantes pour un même circuit, d'afficher chaque voiture ajoutée les unes
+	en dessous des autres.
+	
+07.09.2026
+
+	J'ai développé BottomSheetAddVoiture, un ConsumerStatefulWidget affiché en bas de l'écran
+	avec showModalBottomSheet. Il permet de sélectionner une voiture en deux étapes :
+		- un premier DropdownMenu "marque", construit à partir de la liste des voitures du
+		  fakeVoituresRepositoryProvider, dont je ne garde que les marques uniques (avec le
+		  .toSet())
+		- un second DropdownMenu "voiture", filtré selon la marque sélectionnée
+		  (voitures.where((voiture) => voiture.brand == selectedBrand)), désactivé tant
+		  qu'aucune marque n'est choisie et reconstruit grâce à une au selectedBrand.
+
+	Pour la suite il ne manquera plus qu'a ajouter une section Temps qui me permettrera
+	d'ajouter une liste de String "temps" mais malgré tout les temps passé a rechercher 
+	quelque chose de similaire sur internet je n'ai encore trouver qqch qui me convienne
+	réellement.
+	
+10.09.2026
+
+	J'ai continué BottomSheetAddVoiture en m'attaquant à la section "Temps" qui manquait.
+	Le besoin exprimé par M.Guerdat était : au début, un seul champ de saisie visible, et
+	à chaque appui sur le bouton "+", un champ supplémentaire doit apparaître.
+
+	Pour ça j'ai ajouté une variable nombreDeTemps (int) qui commence à 1, couplée à une liste
+	de TextEditingController (_tempsControllers) qui garde la même longueur que
+	nombreDeTemps. Quand on appuie sur le bouton "+", un setState incrémente
+	nombreDeTemps et ajoute un controller en même temps, ce qui permet à un
+	List.generate(nombreDeTemps, ...) de générer dynamiquement le bon nombre de
+	TextFormField dans le build().
+
+11.09.2026
+
+	Une fois la partie visuelle validée, je me suis occupé de connecter réellement le bouton
+	"Ajouter" (AddButton) à FakeUsersRepository. Jusque là, addUserPerformance() était une
+	méthode vide.
+
+	Pour que le bottom sheet puisse construire une Performance, il lui manquait le
+	circuit concerné donc je l'ai donc ajouté comme second paramètre du widget, transmis
+	depuis circuit_detail_screen.dart au moment d'ouvrir le showModalBottomSheet.
+
+	J'ai ensuite écrit une méthode _validerPerformance() dans le bottom sheet qui :
+		- vérifie que la marque et la voiture sont bien sélectionnées
+		- récupère tous les temps non-vides saisis dans les TextFormField
+		- retrouve l'objet Voiture complet correspondant via firstWhere()
+		- appelle addUserPerformance() sur le repository avec ces données
+		- ferme le bottom sheet une fois l'ajout fait
+
+14.09.2026
+
+	En avançant sur l'affichage des performances, je me suis rendu compte que l'ancienne
+	structure de Performance (une seule voiture + une seule liste de temps par circuit) ne
+	permettait pas de gérer plusieurs voitures sur un même circuit. Or c'est un cas qui va
+	forcément arriver (un utilisateur peut très bien rouler avec plusieurs voitures
+	différentes sur le même tracé), donc des modifications ont suivi.
+
+	Pour ça j'ai créé une nouvelle classe VoiturePerformance qui regroupe une Voiture et sa
+	List<String> temps. Performance garde son circuit mais remplace ses champs voiture/temps
+	par une simple List<VoiturePerformance> voitures, ce qui permet désormais d'avoir
+	plusieurs voitures (et leurs temps respectifs) associées à un seul et même circuit.
+
+	Ce changement a eu un impact sur plusieurs fichiers qui utilisaient l'ancienne structure :
+		- test_users.dart : chaque Performance utilise maintenant voitures: [...] au lieu de
+		  voiture/temps directement
+		- CarResultCard : prend maintenant un VoiturePerformance en paramètre plutôt qu'une
+		  Performance entière (une carte = une voiture), ce qui a demandé d'adapter
+		  circuit_detail_screen.dart pour boucler sur toutes les voitures d'un circuit avec
+		  un .map() plutôt que d'afficher une seule carte
+		- LastResult (page d'accueil) : dernier.voiture/temps devient
+		  performances.last.voitures.last, j'ai extrait ça dans des variables en haut du
+		  build() pour éviter de répéter la même chaîne d'accès plusieurs fois
+		- addUserPerformance() : logique revue pour vérifier si une Performance existe déjà
+		  pour le circuit ciblé - si oui, on ajoute juste la nouvelle voiture à sa liste
+		  voitures, sinon on crée une nouvelle Performance
+
+	Cette restructuration prend plus de temps que prévu mais elle est nécessaire pour la
+	suite, notamment pour la partie carte interactive/secteurs qui va demander de manipuler
+	plusieurs voitures par circuit de toute façon.
+	
+17.09.2026
+
+	J'ai aussi réglé le problème du clavier numérique qui ne permettait pas de taper les
+	caractères ":" et "." nécessaires pour un temps au tour (format minute:seconde.milliseconde,
+	ex: 1:23.456). Plutôt que de forcer un clavier texte complet, j'ai créé un
+	TextInputFormatter personnalisé (LapTimeFormatter, dans son propre fichier pour rester
+	réutilisable) qui prend les chiffres tapés au clavier numérique et insère
+	automatiquement le ":" et le "." au bon endroit au fur et à mesure de la saisie. Chaque
+	TextFormField utilise donc keyboardType: TextInputType.number avec ce formatter, ce qui
+	rend la saisie beaucoup plus rapide sur mobile que de devoir chercher les symboles sur un
+	clavier texte.
+	
+	class LapTimeFormatter extends TextInputFormatter {
+	  @override
+	  TextEditingValue formatEditUpdate(
+		TextEditingValue oldValue,
+		TextEditingValue newValue,
+	  ) {
+		
+		String digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), ''); // 1
+
+		if (digits.length > 6) digits = digits.substring(0, 6); 
+
+		String formatted = digits;
+		if (digits.length >= 2) {} //2
+
+		
+		if (digits.isEmpty) { //3
+		  formatted = '';
+		} else if (digits.length <= 1) {
+		  formatted = digits;
+		} else if (digits.length <= 3) {
+		  formatted = '${digits.substring(0, 1)}:${digits.substring(1)}'; 
+		} else {
+		  formatted =
+			  '${digits.substring(0, 1)}:${digits.substring(1, 3)}.${digits.substring(3)}'; 
+		}
+
+		return TextEditingValue( //4
+		  text: formatted,
+		  selection: TextSelection.collapsed(offset: formatted.length),
+		);
+	  }
+	}
+	
+	1) digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '')Nettoie le texte tapé pour ne garder
+	que les chiffres. La regex [^0-9] signifie "tout ce qui n'est PAS un chiffre" — donc si l'utilisateur
+	a déjà un texte formaté comme 1:23, ça ne garde que 123. Ça permet de repartir d'une base propre
+	à chaque frappe, peu importe ce qu'il y avait avant.
+	
+	2) if (digits.length >= 2) {} C'est un bloc mort/inutile — un reste de brouillon qui ne fait rien
+	(le corps est vide {}). Tu peux le supprimer sans rien casser, la vraie logique de formatage est le
+	if/else juste en dessous.
+	
+	3) Le bloc if (digits.isEmpty) { ... } else if ...
+	C'est le cœur du formatage : selon le nombre de chiffres tapés, on construit le texte affiché différemment :
+
+	- 0 chiffre → champ vide
+	- 1 chiffre → juste le chiffre ("1")
+	- 2-3 chiffres → minute + : + le reste ("1:23")
+	- 4+ chiffres → minute + : + secondes + . + millisecondes ("1:23.456")
+
+	C'est ce qui donne l'effet "auto-formatage" pendant que l'utilisateur tape ses chiffres au clavier numérique
+	
+	4) Le return TextEditingValue(...)
+Renvoie la nouvelle valeur du champ texte : text: formatted est le texte affiché (formaté), et selection: TextSelection.collapsed(offset: formatted.length) replace le curseur à la fin du texte formaté — sans ça, le curseur resterait à sa position d'origine (avant le formatage) et sauterait de façon incohérente à chaque frappe.

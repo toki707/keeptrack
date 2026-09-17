@@ -40,16 +40,7 @@ class CircuitInfos extends StatelessWidget {
               thickness: 2,
               color: const Color.fromARGB(112, 114, 114, 114),
             ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: const Color.fromARGB(135, 129, 129, 129),
-                ),
-                borderRadius: BorderRadius.circular(15),
-                color: const Color.fromARGB(53, 0, 0, 0),
-              ),
-              child: Image.asset(circuit.outline!),
-            ),
+            Image.asset(circuit.outline!),
 
             SizedBox(height: 12),
             Divider(

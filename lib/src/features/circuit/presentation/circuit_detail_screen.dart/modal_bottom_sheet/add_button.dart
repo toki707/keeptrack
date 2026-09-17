@@ -11,7 +11,7 @@ class AddButton extends StatelessWidget {
       onPressed: onPressed,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: const Color.fromARGB(134, 82, 82, 82)),
+          border: Border.all(color: const Color.fromARGB(133, 0, 0, 0)),
           borderRadius: BorderRadius.circular(15),
           gradient: LinearGradient(
             begin: .topLeft,

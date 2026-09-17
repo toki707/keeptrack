@@ -49,7 +49,7 @@ class CircuitDetailScreen extends ConsumerWidget {
                     children: [
                       SizedBox(
                         width: 500,
-                        height: 500,
+                        height: 400,
                         child: ShaderMask(
                           shaderCallback: (Rect bounds) {
                             return LinearGradient(
@@ -83,18 +83,15 @@ class CircuitDetailScreen extends ConsumerWidget {
                             ),
                             child: MyAppBar(circuit: circuit),
                           ),
-                          SizedBox(height: 50),
+                          SizedBox(height: 30),
                           TrackPres(circuit),
                         ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  // SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       crossAxisAlignment: .start,
                       children: [
@@ -115,12 +112,15 @@ class CircuitDetailScreen extends ConsumerWidget {
                         ),
                         Divider(thickness: 3.0),
 
-                        ...voituresDuCircuit.map(
-                          (voiturePerformance) => Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: CarResultCard(voiturePerformance),
-                          ),
-                        ),
+                        ...voituresDuCircuit
+                            .map(
+                              (voiturePerformance) => Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: CarResultCard(voiturePerformance),
+                              ),
+                            )
+                            .toList()
+                            .reversed,
 
                         SizedBox(height: 12),
                         Row(
