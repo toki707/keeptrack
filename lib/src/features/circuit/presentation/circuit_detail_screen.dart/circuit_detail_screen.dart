@@ -8,7 +8,7 @@ import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_scree
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/track_pres.dart';
 import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/modal_bottom_sheet/bottom_sheet_add_voiture.dart';
-import 'package:keeptrack/src/features/user/domain/voiture_performance.dart'; // ⬅️ AJOUTÉ
+import 'package:keeptrack/src/features/user/domain/voiture_performance.dart';
 
 class CircuitDetailScreen extends ConsumerWidget {
   const CircuitDetailScreen(this.circuitId, {super.key});
@@ -95,7 +95,7 @@ class CircuitDetailScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: .start,
                       children: [
-                        CircuitInfos(circuit: circuit),
+                        CircuitCaracteristiques(circuit),
                         SizedBox(height: 40),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
