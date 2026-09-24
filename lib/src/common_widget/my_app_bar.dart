@@ -22,13 +22,9 @@ class MyAppBar extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton.outlined(
+                      IconButton(
                         color: Colors.white,
-                        style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Color.fromARGB(121, 41, 41, 41),
-                          ),
-                        ),
+
                         onPressed: () => Navigator.of(context).maybePop(),
                         icon: const Icon(Icons.arrow_back),
                       ),

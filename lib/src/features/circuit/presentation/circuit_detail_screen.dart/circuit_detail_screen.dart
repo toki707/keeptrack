@@ -108,24 +108,7 @@ class CircuitDetailScreen extends ConsumerWidget {
                                 fontSize: 18,
                               ),
                             ),
-                          ],
-                        ),
-                        Divider(thickness: 3.0),
-
-                        ...voituresDuCircuit
-                            .map(
-                              (voiturePerformance) => Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: CarResultCard(voiturePerformance),
-                              ),
-                            )
-                            .toList()
-                            .reversed,
-
-                        SizedBox(height: 12),
-                        Row(
-                          mainAxisAlignment: .center,
-                          children: [
+                            Expanded(child: SizedBox(width: 0)),
                             IconButton.outlined(
                               style: ButtonStyle(
                                 backgroundColor: WidgetStatePropertyAll(
@@ -147,6 +130,23 @@ class CircuitDetailScreen extends ConsumerWidget {
                                 );
                               },
                             ),
+                          ],
+                        ),
+                        Divider(thickness: 3.0),
+
+                        ...voituresDuCircuit
+                            .map(
+                              (voiturePerformance) => Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: CarResultCard(voiturePerformance),
+                              ),
+                            )
+                            .toList()
+                            .reversed,
+
+                        SizedBox(height: 12),
+                        Row(mainAxisAlignment: .center, children: [
+                            
                           ],
                         ),
                       ],
