@@ -12,7 +12,7 @@ class LastResult extends StatelessWidget {
     final lastVoiturePerformance = lastPerformance.voitures.last;
 
     return Container(
-      width: 500,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: const Color.fromARGB(78, 13, 13, 13),
         borderRadius: BorderRadius.circular(10),

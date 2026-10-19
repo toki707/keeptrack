@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/modal_bottom_sheet/add_button.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/modal_bottom_sheet/lap_time_formatter.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/modal_bottom_sheet/add_button.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/modal_bottom_sheet/lap_time_formatter.dart';
 import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
 import 'package:keeptrack/src/features/voiture/data/fake_voitures_repository.dart';

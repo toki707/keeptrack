@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:keeptrack/src/common_widget/aura_background.dart';
 import 'package:keeptrack/src/common_widget/my_app_bar.dart';
 import 'package:keeptrack/src/features/circuit/data/fake_circuits_repository.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/car_result_card.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/circuit_infos.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/track_pres.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/car_result_card.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/circuit_infos.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/track_pres.dart';
 import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/modal_bottom_sheet/bottom_sheet_add_voiture.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/modal_bottom_sheet/bottom_sheet_add_voiture.dart';
 import 'package:keeptrack/src/features/user/domain/voiture_performance.dart';
 
 class CircuitDetailScreen extends ConsumerWidget {
@@ -48,7 +48,7 @@ class CircuitDetailScreen extends ConsumerWidget {
                   Stack(
                     children: [
                       SizedBox(
-                        width: 500,
+                        width: double.infinity,
                         height: 400,
                         child: ShaderMask(
                           shaderCallback: (Rect bounds) {

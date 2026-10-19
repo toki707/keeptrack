@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:keeptrack/src/features/circuit/presentation/circuit_detail_screen.dart/circuit_detail_screen.dart';
+import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/circuit_detail_screen.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/user_home_screen.dart';
 
 final goRouter = GoRouter(
