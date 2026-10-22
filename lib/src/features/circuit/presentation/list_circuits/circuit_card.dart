@@ -38,15 +38,19 @@ class CircuitCard extends StatelessWidget {
                 mainAxisSize: .max,
                 mainAxisAlignment: .start,
                 children: [
-                  Text(
-                    circuit.name,
-                    style: TextStyle(
-                      fontFamily: "D3Euronism",
-                      color: Colors.white,
-                      fontSize: 18,
+                  Expanded(
+                    child: Text(
+                      circuit.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: "D3Euronism",
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
-                  Expanded(child: SizedBox(width: 0)),
+                  SizedBox(width: 8),
                   CircleAvatar(
                     backgroundImage: NetworkImage(
                       "https://flagcdn.com/w160/${circuit.location}.png",

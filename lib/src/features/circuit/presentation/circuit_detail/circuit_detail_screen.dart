@@ -14,11 +14,11 @@ class CircuitDetailScreen extends ConsumerWidget {
   const CircuitDetailScreen(this.circuitId, {super.key});
 
   final String circuitId;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final circuitRepository = ref.watch(fakeCircuitsRepositoryProvider);
     final circuit = circuitRepository.getCircuitById(circuitId);
+    
 
     final userReposistory = ref.watch(fakeUsersRepositoryProvider);
     final currentUser = userReposistory.getUserById("1");

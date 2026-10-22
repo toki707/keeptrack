@@ -8,6 +8,7 @@ class TrackPres extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -24,12 +25,15 @@ class TrackPres extends StatelessWidget {
               ),
               SizedBox(width: 8),
 
-              Text(
-                circuit.name,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: "D3Euronism",
-                  fontSize: 50,
+              SizedBox(
+                width: size.width * 0.8,
+                child: Text(
+                  circuit.name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "D3Euronism",
+                    fontSize: 49,
+                  ),
                 ),
               ),
             ],
