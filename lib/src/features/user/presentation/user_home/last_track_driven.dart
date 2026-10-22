@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:keeptrack/src/common_widget/flag_avatar.dart';
+import 'package:keeptrack/src/common_widget/styled_text.dart';
+import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
+import 'package:keeptrack/theme/theme.dart';
 
 class LastTrackDriven extends StatelessWidget {
   const LastTrackDriven(this.circuit, {super.key});
@@ -13,18 +17,15 @@ class LastTrackDriven extends StatelessWidget {
       onTap: () =>
           context.goNamed("circuitDetail", pathParameters: {'id': circuit.id}),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: Sizes.p4),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(Sizes.p16),
           child: Container(
-            height: 150,
-            width: 500,
+            height: Sizes.p148,
+            width: Sizes.p500,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 128, 0, 0),
-              border: Border.all(
-                color: const Color.fromARGB(218, 48, 48, 48),
-                width: 2,
-              ),
+              color: AppColors.trackCardColor,
+              border: Border.all(color: AppColors.trackCardBorder, width: 2),
             ),
             child: Stack(
               fit: StackFit.expand,
@@ -42,51 +43,37 @@ class LastTrackDriven extends StatelessWidget {
                       stops: [0.0, 0.4, 0.8],
                       colors: [
                         Colors.transparent,
-                        Color.fromARGB(83, 63, 2, 2),
-                        Color.fromARGB(218, 40, 0, 0),
+                        AppColors.trackGradientMiddle,
+                        AppColors.trackGradientEnd,
                       ],
                     ),
                   ),
                 ),
                 Row(
                   children: [
-                    SizedBox(width: 12),
+                    gapW12,
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 30,
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              "https://flagcdn.com/w160/${circuit.location}.png",
-                            ),
-                          ),
+                          width: Sizes.p32,
+                          child: FlagAvatar(circuit.location),
                         ),
-                        Image.asset(circuit.outline!, height: 90),
+                        Image.asset(circuit.outline!, height: Sizes.p96),
                       ],
                     ),
-                    const SizedBox(width: 30),
+                    gapW28,
                     Column(
                       mainAxisAlignment: .center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          circuit.name,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: "D3Euronism",
-                            fontSize: 16,
-                          ),
-                        ),
+                        StyledText(circuit.name),
                         SizedBox(
-                          width: 120,
-                          child: Text(
+                          width: Sizes.p120,
+                          child: StyledText(
                             "${circuit.country}, ${circuit.city}",
-                            style: const TextStyle(
-                              color: Color.fromARGB(155, 255, 255, 255),
-                              fontFamily: "D3Euronism",
-                              fontSize: 10,
-                            ),
+                            fontSize: Sizes.p12,
+                            color: AppColors.textMuted,
                           ),
                         ),
                       ],

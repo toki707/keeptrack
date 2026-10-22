@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:keeptrack/src/common_widget/flag_avatar.dart';
+import 'package:keeptrack/src/common_widget/styled_text.dart';
+import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
+import 'package:keeptrack/theme/theme.dart';
 
 class TrackPres extends StatelessWidget {
   const new(this.circuit, {super.key});
@@ -10,7 +14,7 @@ class TrackPres extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(Sizes.p12),
       child: Column(
         crossAxisAlignment: .start,
 
@@ -18,47 +22,26 @@ class TrackPres extends StatelessWidget {
           Row(
             crossAxisAlignment: .center,
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  "https://flagcdn.com/w160/${circuit.location}.png",
-                ),
-              ),
-              SizedBox(width: 8),
+              FlagAvatar(circuit.location),
+              gapW8,
 
               SizedBox(
                 width: size.width * 0.8,
-                child: Text(
-                  circuit.name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "D3Euronism",
-                    fontSize: 49,
-                  ),
-                ),
+                child: StyledText(circuit.name, fontSize: Sizes.p48),
               ),
             ],
           ),
 
-          SizedBox(height: 4),
+          gapH4,
 
-          Text(
-            circuit.description!,
-            style: TextStyle(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              fontFamily: "D3Euronism",
-              fontSize: 30,
-            ),
-          ),
+          StyledText(circuit.description!, fontSize: Sizes.p32),
 
-          SizedBox(height: 40),
+          gapH40,
 
-          Text(
+          StyledText(
             "${circuit.country}, ${circuit.city}",
-            style: TextStyle(
-              color: const Color.fromARGB(188, 255, 255, 255),
-              fontFamily: "D3Euronism",
-              fontSize: 20,
-            ),
+            fontSize: Sizes.p20,
+            color: AppColors.textLight,
           ),
         ],
       ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:keeptrack/src/common_widget/styled_card.dart';
+import 'package:keeptrack/src/common_widget/styled_text.dart';
+import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/user/domain/voiture_performance.dart';
 
 class CarResultCard extends StatelessWidget {
@@ -8,58 +11,36 @@ class CarResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(148, 19, 19, 19),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: const Color.fromARGB(91, 62, 62, 62),
-          width: 2,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        child: Row(
-          children: [
-            Container(
-              width: 150,
-              height: 100,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(voiturePerformance.voiture.preview),
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(25)),
+    return StyledCard(
+      child: Row(
+        children: [
+          Container(
+            width: Sizes.p148,
+            height: Sizes.p100,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(voiturePerformance.voiture.preview),
               ),
+              borderRadius: BorderRadius.all(Radius.circular(Sizes.p24)),
             ),
+          ),
 
-            SizedBox(width: 15),
+          gapW16,
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  voiturePerformance.voiture.name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "D3Euronism",
-                    fontSize: 18,
-                  ),
-                ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              StyledText(voiturePerformance.voiture.name, fontSize: Sizes.p20),
 
-                SizedBox(height: 12),
+              gapH12,
 
-                Text(
-                  "${voiturePerformance.temps.length} Tours",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "D3Euronism",
-                    fontSize: 10,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              StyledText(
+                "${voiturePerformance.temps.length} Tours",
+                fontSize: Sizes.p12,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

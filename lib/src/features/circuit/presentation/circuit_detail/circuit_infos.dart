@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:keeptrack/src/common_widget/info_item.dart';
+import 'package:keeptrack/src/common_widget/section_title.dart';
+import 'package:keeptrack/src/common_widget/styled_card.dart';
+import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
+import 'package:keeptrack/theme/theme.dart';
 
 class CircuitCaracteristiques extends StatefulWidget {
   const CircuitCaracteristiques(this.circuit, {super.key});
@@ -18,240 +23,66 @@ class _CircuitCaracteristiquesState extends State<CircuitCaracteristiques> {
   Widget build(BuildContext context) {
     final circuit = widget.circuit;
 
-    return Container(
-      padding: .symmetric(horizontal: 12, vertical: 16),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(148, 19, 19, 19),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: const Color.fromARGB(91, 62, 62, 62),
-          width: 2,
-        ),
-      ),
+    return StyledCard(
+      padding: .symmetric(horizontal: Sizes.p12, vertical: Sizes.p16),
       child: ExpansionTile(
         initiallyExpanded: true,
         shape: Border(),
         trailing: SizedBox.shrink(),
         onExpansionChanged: (expanded) =>
             setState(() => _isExpanded = expanded),
-        title: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Caracteristiques :",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "D3Euronism",
-                    fontSize: 19,
-                  ),
-                ),
-
-                AnimatedRotation(
-                  turns: _isExpanded ? 0.5 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+        title: SectionTitle(
+          "Caracteristiques :",
+          trailing: AnimatedRotation(
+            turns: _isExpanded ? 0.5 : 0,
+            duration: const Duration(milliseconds: 200),
+            child: const Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.textColor,
             ),
-          ],
-        ),
-        subtitle: Divider(
-          thickness: 2,
-          color: const Color.fromARGB(255, 255, 255, 255),
+          ),
         ),
         children: [
           Image.asset(circuit.outline!),
 
-          SizedBox(height: 12),
-          Divider(
-            thickness: 1,
-            color: const Color.fromARGB(112, 114, 114, 114),
+          gapH12,
+          Divider(thickness: 1, color: AppColors.dividerGrey),
+          _infoRow(
+            InfoItem(label: "Date de creation", value: "${circuit.yearCreation!}"),
+            InfoItem(label: "Nombre de boxes", value: "${circuit.pitboxes}"),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        "Date de creation",
-                        style: TextStyle(
-                          color: const Color.fromARGB(164, 255, 255, 255),
-                          fontFamily: "D3Euronism",
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        "${circuit.yearCreation!}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "D3Euronism",
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        "Nombre de boxes",
-                        style: TextStyle(
-                          color: const Color.fromARGB(164, 255, 255, 255),
-                          fontFamily: "D3Euronism",
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        "${circuit.pitboxes}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "D3Euronism",
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+
+          Divider(thickness: 1, color: AppColors.dividerGrey),
+          _infoRow(
+            InfoItem(label: "Longueur", value: "${circuit.lengthKm}"),
+            InfoItem(label: "Sens", value: "${circuit.run}"),
+          ),
+
+          Divider(thickness: 1, color: AppColors.dividerGrey),
+          _infoRow(
+            InfoItem(
+              label: "Point le plus haut",
+              value: "${circuit.highestPoint}",
+            ),
+            InfoItem(
+              label: "point le plus bas",
+              value: "${circuit.lowestPoint}",
             ),
           ),
+        ],
+      ),
+    );
+  }
 
-          Divider(
-            thickness: 1,
-            color: const Color.fromARGB(112, 114, 114, 114),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        "Longueur",
-                        style: TextStyle(
-                          color: const Color.fromARGB(164, 255, 255, 255),
-                          fontFamily: "D3Euronism",
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        "${circuit.lengthKm}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "D3Euronism",
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        "Sens",
-                        style: TextStyle(
-                          color: const Color.fromARGB(164, 255, 255, 255),
-                          fontFamily: "D3Euronism",
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        "${circuit.run}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "D3Euronism",
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          Divider(
-            thickness: 1,
-            color: const Color.fromARGB(112, 114, 114, 114),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        "Point le plus haut",
-                        style: TextStyle(
-                          color: const Color.fromARGB(164, 255, 255, 255),
-                          fontFamily: "D3Euronism",
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        "${circuit.highestPoint}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "D3Euronism",
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        "point le plus bas",
-                        style: TextStyle(
-                          color: const Color.fromARGB(164, 255, 255, 255),
-                          fontFamily: "D3Euronism",
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        "${circuit.lowestPoint}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "D3Euronism",
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+  /// Une ligne contenant deux informations côte à côte.
+  Widget _infoRow(InfoItem left, InfoItem right) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Sizes.p28),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: left),
+          Expanded(child: right),
         ],
       ),
     );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:keeptrack/src/common_widget/styled_text.dart';
+import 'package:keeptrack/src/constants/app_sizes.dart';
 
 class TabItem extends StatelessWidget {
   const new({required this.title, super.key});
@@ -6,15 +8,6 @@ class TabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tab(
-      child: Text(
-        title,
-        style: TextStyle(
-          fontFamily: "D3Euronism",
-          color: Colors.white,
-          fontSize: 21,
-        ),
-      ),
-    );
+    return Tab(child: StyledText(title, fontSize: Sizes.p20));
   }
 }

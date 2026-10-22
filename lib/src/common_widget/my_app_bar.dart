@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
+import 'package:keeptrack/theme/theme.dart';
 
 class MyAppBar extends StatelessWidget {
   const new({super.key, this.circuit});
@@ -14,7 +16,7 @@ class MyAppBar extends StatelessWidget {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: Sizes.p4),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -23,7 +25,7 @@ class MyAppBar extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        color: Colors.white,
+                        color: AppColors.textColor,
 
                         onPressed: () => Navigator.of(context).maybePop(),
                         icon: const Icon(Icons.arrow_back),
@@ -33,16 +35,19 @@ class MyAppBar extends StatelessWidget {
 
                       Image.asset(
                         "assets/images/keeptrack_icon.png",
-                        width: 50,
+                        width: Sizes.p48,
                       ),
                     ],
                   )
                 else
-                  Image.asset("assets/images/KeepTrack_logo.png", width: 230),
+                  Image.asset(
+                    "assets/images/KeepTrack_logo.png",
+                    width: Sizes.p232,
+                  ),
 
                 const SizedBox(
-                  width: 148,
-                  child: Divider(color: Colors.white, thickness: 2),
+                  width: Sizes.p148,
+                  child: Divider(color: AppColors.dividerColor, thickness: 2),
                 ),
               ],
             ),

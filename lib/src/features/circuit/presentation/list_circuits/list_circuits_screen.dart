@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:keeptrack/src/common_widget/styled_text.dart';
+import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/circuit/data/fake_circuits_repository.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 import 'package:keeptrack/src/features/circuit/presentation/list_circuits/circuit_card.dart';
+import 'package:keeptrack/theme/theme.dart';
 
 class ListCircuitsScreen extends ConsumerStatefulWidget {
   const ListCircuitsScreen({super.key});
@@ -25,36 +28,22 @@ class _ListCircuitsScreenState extends ConsumerState<ListCircuitsScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(Sizes.p16),
             child: SearchBar(
               hintText: "Rechercher...",
               hintStyle: WidgetStatePropertyAll(
-                TextStyle(
-                  fontFamily: "D3Euronism",
-                  color: const Color.fromARGB(109, 223, 176, 176),
-                  fontSize: 18,
-                ),
+                TextStyle(color: AppColors.searchHint, fontSize: Sizes.p20),
               ),
-              leading: Icon(
-                Icons.search,
-                color: const Color.fromARGB(109, 223, 176, 176),
-              ),
+              leading: Icon(Icons.search, color: AppColors.searchHint),
               backgroundColor: WidgetStatePropertyAll(
-                const Color.fromARGB(117, 0, 0, 0),
+                AppColors.searchBackground,
               ),
               textStyle: WidgetStatePropertyAll(
-                TextStyle(
-                  fontFamily: "D3Euronism",
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
+                TextStyle(color: AppColors.textColor, fontSize: Sizes.p20),
               ),
               shadowColor: WidgetStatePropertyAll(Colors.transparent),
               side: WidgetStatePropertyAll(
-                BorderSide(
-                  color: const Color.fromARGB(155, 90, 89, 89),
-                  width: 2,
-                ),
+                BorderSide(color: AppColors.searchBorder, width: 2),
               ),
               onChanged: (text) {
                 setState(() {
@@ -68,14 +57,7 @@ class _ListCircuitsScreenState extends ConsumerState<ListCircuitsScreen> {
                         )
                         .toList();
                   } else {
-                    Text(
-                      "Aucun circuit trouvé",
-                      style: TextStyle(
-                        fontFamily: "D3Euronism",
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    );
+                    StyledText("Aucun circuit trouvé", fontSize: Sizes.p20);
                   }
                 });
               },
@@ -83,14 +65,14 @@ class _ListCircuitsScreenState extends ConsumerState<ListCircuitsScreen> {
           ),
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
               itemCount: _searchText.isEmpty
                   ? circuits.length
                   : _filteredCircuits.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
+                crossAxisSpacing: Sizes.p12,
+                mainAxisSpacing: Sizes.p12,
                 childAspectRatio: 1.5,
               ),
               itemBuilder: (context, index) {
