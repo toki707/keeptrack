@@ -1,4 +1,5 @@
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
+import 'package:keeptrack/src/features/user/domain/objectif.dart';
 import 'package:keeptrack/src/features/user/domain/performance.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
 import 'package:keeptrack/src/features/user/domain/voiture_performance.dart';
@@ -52,6 +53,30 @@ List<User> testUsers = [
             temps: ["1:42.987", "1:41.234", "1:43.501", "1:41.890"],
           ),
         ],
+      ),
+    ],
+    objectifs: [
+      Objectif(
+        id: "1",
+        circuit: Circuit(id: "2", name: "Spa"),
+        voiture: Voiture(
+          id: "2",
+          name: "Ferrari F2004",
+          preview: "assets/images/cars/previews/ks_ferrari_f2004.jpg",
+        ),
+        tempsCible: "1:41.000",
+        tempsDepart: "1:42.987",
+      ),
+      Objectif(
+        id: "1",
+        circuit: Circuit(id: "7", name: "Silverstone GP"),
+        voiture: Voiture(
+          id: "2",
+          name: "Ferrari F2004",
+          preview: "assets/images/cars/previews/ks_ferrari_f2004.jpg",
+        ),
+        tempsCible: "1:41.000",
+        tempsDepart: "1:42.987",
       ),
     ],
   ),

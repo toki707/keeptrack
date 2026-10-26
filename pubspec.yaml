@@ -87,6 +87,9 @@ flutter:
     - family: D3Euronism
       fonts:
         - asset: assets/fonts/D3Euronism.ttf
+    - family: Michroma
+      fonts:
+        - asset: assets/fonts/Michroma-Regular.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

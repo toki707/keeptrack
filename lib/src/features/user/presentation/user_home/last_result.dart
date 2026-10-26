@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:keeptrack/src/common_widget/flag_avatar.dart';
 import 'package:keeptrack/src/common_widget/info_line.dart';
+import 'package:keeptrack/src/common_widget/section_title.dart';
 import 'package:keeptrack/src/common_widget/styled_card.dart';
 import 'package:keeptrack/src/common_widget/styled_text.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
@@ -19,14 +20,16 @@ class LastResult extends StatelessWidget {
 
     return StyledCard(
       padding: EdgeInsets.symmetric(vertical: Sizes.p16, horizontal: Sizes.p12),
-      color: AppColors.resultCardColor,
-      borderColor: AppColors.resultCardBorder,
+      color: AppColors.cardColor,
+      borderColor: AppColors.cardBorder,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SectionTitle("Dernier Resultat :"),
+          gapH12,
           Container(
             decoration: BoxDecoration(
-              color: AppColors.resultInnerColor,
+              color: AppColors.cardBorder,
               borderRadius: BorderRadius.circular(Sizes.p12),
             ),
             child: Padding(

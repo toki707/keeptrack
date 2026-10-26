@@ -91,7 +91,7 @@ List<Circuit> testCircuits = [
     name: "Laguna Seca",
     description: "Mazda Raceway Laguna Seca",
     tags: ["circuit", "original", "drift", "Usa"],
-    country: "États-Unis",
+    country: "Etats-Unis",
     city: "Monterey",
     pitboxes: "24",
     run: "anti-horaire",
