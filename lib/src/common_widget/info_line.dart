@@ -3,7 +3,6 @@ import 'package:keeptrack/src/common_widget/styled_text.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/theme/theme.dart';
 
-
 class InfoLine extends StatelessWidget {
   const InfoLine({super.key, required this.label, required this.value});
 
@@ -18,7 +17,7 @@ class InfoLine extends StatelessWidget {
         children: [
           StyledText(label),
           gapW4,
-          Expanded(child: Container(color: AppColors.infoLineColor, height: 2)),
+          Expanded(child: Container(color: AppColors.cardBorder, height: 2)),
           gapW4,
           StyledText(value),
         ],

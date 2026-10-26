@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-
 class AppColors {
   // Couleurs principales
   static const Color primaryColor = Color.fromARGB(255, 139, 9, 0);
+  static const Color primaryAccent = Color.fromARGB(212, 255, 1, 1);
   static const Color backgroundColor = Color.fromARGB(255, 38, 0, 0);
   static const Color scaffoldColor = Color.fromARGB(255, 39, 39, 39);
 
@@ -56,6 +56,13 @@ class AppColors {
   static const Color addButtonEnd = Color.fromARGB(133, 53, 0, 0);
   static const Color inputHint = Colors.white38;
   static const Color inputLabel = Colors.white70;
+
+  // Objectif
+  static const Color objectifOrange = Color.fromARGB(255, 255, 157, 77);
+  static const Color objectifLabel = Color.fromARGB(255, 201, 184, 184);
+  static const Color objectifCardColor = Color.fromARGB(9, 255, 255, 255);
+  static const Color objectifCardBorder = Color.fromARGB(31, 255, 255, 255);
+  static const Color progressBackground = Color.fromARGB(26, 255, 255, 255);
 }
 
 ThemeData primaryTheme = ThemeData(
@@ -64,7 +71,7 @@ ThemeData primaryTheme = ThemeData(
     brightness: Brightness.dark,
   ),
 
-  fontFamily: "D3Euronism",
+  fontFamily: "Michroma",
 
   scaffoldBackgroundColor: AppColors.scaffoldColor,
 );

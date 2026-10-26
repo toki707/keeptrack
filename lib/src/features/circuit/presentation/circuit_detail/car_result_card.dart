@@ -38,6 +38,12 @@ class CarResultCard extends StatelessWidget {
                 "${voiturePerformance.temps.length} Tours",
                 fontSize: Sizes.p12,
               ),
+
+              gapH12,
+              StyledText(
+                "Meilleur tour : ${voiturePerformance.meilleurTemps}",
+                fontSize: Sizes.p12,
+              ),
             ],
           ),
         ],
