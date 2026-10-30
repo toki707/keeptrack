@@ -28,4 +28,44 @@ class User {
       objectifs: objectifs ?? this.objectifs,
     );
   }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    final id = json['id'];
+    if (id == null || id is! String) {
+      throw FormatException(
+        "Le Json est invalide : id doit être de type String dans $json",
+      );
+    }
+
+    final name = json['name'];
+    if (name == null || name is! String) {
+      throw FormatException(
+        "Le Json est invalide : name doit être de type String dans $json",
+      );
+    }
+
+    final performances = json['performances'];
+    if (performances == null || performances is! List) {
+      throw FormatException(
+        "Le Json est invalide : performances doit être de type List dans $json",
+      );
+    }
+
+    final objectifs = json['objectifs'] as List?;
+
+    return User(
+      id: id,
+      name: name,
+      performances: performances
+          .cast<Map<String, dynamic>>()
+          .map((performanceData) => Performance.fromJson(performanceData))
+          .toList(),
+      objectifs: objectifs != null
+          ? objectifs
+                .cast<Map<String, dynamic>>()
+                .map((objectifData) => Objectif.fromJson(objectifData))
+                .toList()
+          : <Objectif>[],
+    );
+  }
 }

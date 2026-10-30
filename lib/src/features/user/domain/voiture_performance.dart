@@ -17,6 +17,27 @@ class VoiturePerformance {
     );
   }
 
+  factory VoiturePerformance.fromJson(Map<String, dynamic> json) {
+    final voiture = json['voiture'];
+    if (voiture == null || voiture is! Map<String, dynamic>) {
+      throw FormatException(
+        "Le Json est invalide : voiture doit être de type Map dans $json",
+      );
+    }
+
+    final temps = json['temps'];
+    if (temps == null || temps is! List) {
+      throw FormatException(
+        "Le Json est invalide : temps doit être de type List dans $json",
+      );
+    }
+
+    return VoiturePerformance(
+      voiture: Voiture.fromJson(voiture),
+      temps: temps.cast<String>().toList(),
+    );
+  }
+
   int tempsEnMs(String temps) {
     final minutesEtRestes = temps.split(":");
     final secondesEtMs = minutesEtRestes[1].split(".");

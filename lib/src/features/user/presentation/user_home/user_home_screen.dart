@@ -8,7 +8,7 @@ import 'package:keeptrack/src/common_widget/tab_item.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 import 'package:keeptrack/src/features/circuit/presentation/list_circuits/list_circuits_screen.dart';
-import 'package:keeptrack/src/features/user/data/fake_users_repository.dart';
+import 'package:keeptrack/src/features/user/data/remote/user_remote.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/last_result.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/last_track_driven.dart';
@@ -23,9 +23,7 @@ class UserHomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final usersRepository = ref.watch(fakeUsersRepositoryProvider);
-    final users = usersRepository.getUsersList();
-
+    final usersAsync = ref.watch(usersListFutureProvider);
     final size = MediaQuery.sizeOf(context);
 
     return DefaultTabController(
@@ -42,7 +40,6 @@ class UserHomeScreen extends ConsumerWidget {
               children: [
                 MyAppBar(),
                 gapH20,
-
                 Container(
                   width: size.width * 0.9,
                   decoration: BoxDecoration(
@@ -62,7 +59,6 @@ class UserHomeScreen extends ConsumerWidget {
                         Radius.circular(Sizes.p100),
                       ),
                     ),
-
                     tabs: [
                       TabItem(title: 'Home'),
                       TabItem(title: 'Circuits'),
@@ -70,15 +66,31 @@ class UserHomeScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-
                 gapH32,
                 Expanded(
-                  child: TabBarView(
-                    children: [
-                      HomeScreen(users),
-                      ListCircuitsScreen(),
-                      Placeholder(),
-                    ],
+                  child: usersAsync.when(
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stackTrace) => const Center(
+                      child: Text('Erreur de chargement de l’utilisateur'),
+                    ),
+                    data: (users) {
+                      if (users.isEmpty) {
+                        return const Center(
+                          child: Text('Aucun utilisateur trouvé'),
+                        );
+                      }
+
+                      final currentUser = users.first;
+
+                      return TabBarView(
+                        children: [
+                          HomeScreen(currentUser),
+                          ListCircuitsScreen(),
+                          Placeholder(),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ],
@@ -91,9 +103,9 @@ class UserHomeScreen extends ConsumerWidget {
 }
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen(this.users, {super.key});
+  const HomeScreen(this.user, {super.key});
 
-  final List<User> users;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -101,15 +113,15 @@ class HomeScreen extends StatelessWidget {
       children: [
         SectionTitle("Objectifs en cours :"),
         gapH12,
-        ObjectifsCarousel(users.first.objectifs, users.first.performances),
+        ObjectifsCarousel(user.objectifs, user.performances),
         gapH64,
-        LastResult(users.first),
+        LastResult(user),
         gapH8,
         StyledCard(
           child: Column(
             children: [
               SectionTitle("Derniers Circuits roules :"),
-              ...users.first.performances.reversed.map(
+              ...user.performances.reversed.map(
                 (performance) => LastTrackDriven(performance.circuit),
               ),
             ],
