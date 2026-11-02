@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:keeptrack/src/common_widget/styled_text.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
-import 'package:keeptrack/src/features/circuit/data/remote/circuit_remote.dart';
+import 'package:keeptrack/src/features/circuit/data/remote/nodejs_circuits_repository.dart';
 import 'package:keeptrack/src/features/circuit/presentation/list_circuits/circuit_card.dart';
 import 'package:keeptrack/theme/theme.dart';
 
@@ -35,7 +35,7 @@ class _ListCircuitsScreenState extends ConsumerState<ListCircuitsScreen> {
               ? circuits
               : circuits
                     .where(
-                      (circuit) => circuit.name.toLowerCase().contains(
+                      (circuit) => circuit.name!.toLowerCase().contains(
                         _searchText.toLowerCase(),
                       ),
                     )

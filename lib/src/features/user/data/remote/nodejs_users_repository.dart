@@ -6,11 +6,11 @@ import 'package:keeptrack/src/features/user/domain/user.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
-class UserService {
+class NodejsUsersRepository {
   static const url = 'http://127.0.0.1:3000';
   final users = <User>[];
 
-  Future<List<User>> fetchUserList() async {
+  Future<List<User>> fetchUsersList() async {
     try {
       final parsedUrl = Uri.parse('$url/api/users');
       final response = await http.get(parsedUrl);
@@ -21,11 +21,11 @@ class UserService {
       }
       final data = jsonDecode(response.body) as List;
       users.clear();
-      for (final v in data) {
-        users.add(User.fromJson(v as Map<String, dynamic>));
+      for (final userJson in data) {
+        users.add(User.fromJson(userJson as Map<String, dynamic>));
       }
       return users;
-    } catch (e) {
+    } catch (erreur) {
       rethrow;
     }
   }
@@ -35,12 +35,12 @@ class UserService {
   }
 }
 
-final usersRepositoryProvider = Provider<UserService>((ref) {
-  return UserService();
+final nodejsUsersRepositoryProvider = Provider<NodejsUsersRepository>((ref) {
+  return NodejsUsersRepository();
 });
 
 final usersListFutureProvider = FutureProvider<List<User>>((ref) {
-  final userRepository = ref.watch(usersRepositoryProvider);
+  final usersRepository = ref.watch(nodejsUsersRepositoryProvider);
 
-  return userRepository.fetchUserList();
+  return usersRepository.fetchUsersList();
 });

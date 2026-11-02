@@ -8,7 +8,7 @@ import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/modal
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/modal_bottom_sheet/lap_time_formatter.dart';
 import 'package:keeptrack/src/features/user/data/local/fake_users_repository.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
-import 'package:keeptrack/src/features/voiture/data/remote/voiture_remote.dart';
+import 'package:keeptrack/src/features/voiture/data/remote/nodejs_voitures_repository.dart';
 import 'package:keeptrack/src/features/voiture/domain/voiture.dart';
 import 'package:keeptrack/theme/theme.dart';
 
@@ -65,7 +65,7 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
     ref
         .read(fakeUsersRepositoryProvider)
         .addUserPerformance(
-          userId: widget.currentUser.id,
+          userId: widget.currentUser.id!,
           circuit: widget.circuit,
           voiture: voitureSelectionnee,
           temps: tempsList,
@@ -162,7 +162,7 @@ class _BottomSheetAddCarState extends ConsumerState<BottomSheetAddVoiture> {
                     StyledDropdown(
                       key: ValueKey(selectedBrand),
                       label: "voiture",
-                      values: voitureNames,
+                      values: voitureNames.whereType<String>().toList(),
                       enabled: selectedBrand != null,
                       onSelected: (value) {
                         setState(() => selectedVoiture = value);

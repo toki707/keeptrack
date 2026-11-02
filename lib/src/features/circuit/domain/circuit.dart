@@ -1,6 +1,6 @@
 class Circuit {
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   final String? description;
   final List<String>? tags;
   final List<String>? geotags;
@@ -17,8 +17,8 @@ class Circuit {
   final String? location;
 
   Circuit({
-    required this.id,
-    required this.name,
+    this.id,
+    this.name,
     this.description,
     this.tags,
     this.geotags,
@@ -36,15 +36,15 @@ class Circuit {
   });
 
   factory Circuit.fromJson(Map<String, dynamic> json) {
-    final id = json['id'];
-    if (id == null || id is! String) {
+    final id = json['_id'];
+    if (id != null && id is! String?) {
       throw FormatException(
         "Le Json est invalide : id doit être de type String dans $json",
       );
     }
 
     final name = json['name'];
-    if (name == null || name is! String) {
+    if (name != null && name is! String?) {
       throw FormatException(
         "Le Json est invalide : name doit être de type String dans $json",
       );
@@ -139,8 +139,8 @@ class Circuit {
     }
 
     return Circuit(
-      id: id,
-      name: name,
+      id: id as String?,
+      name: name as String?,
       description: description as String?,
       tags: tags?.cast<String>().toList(),
       geotags: geotags?.cast<String>().toList(),

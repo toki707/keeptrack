@@ -27,7 +27,7 @@ class TrackPres extends StatelessWidget {
 
               SizedBox(
                 width: size.width * 0.8,
-                child: StyledText(circuit.name, fontSize: Sizes.p48),
+                child: StyledText(circuit.name!, fontSize: Sizes.p48),
               ),
             ],
           ),

@@ -8,11 +8,11 @@ import 'package:keeptrack/src/common_widget/tab_item.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 import 'package:keeptrack/src/features/circuit/presentation/list_circuits/list_circuits_screen.dart';
-import 'package:keeptrack/src/features/user/data/remote/user_remote.dart';
+import 'package:keeptrack/src/features/user/data/remote/nodejs_users_repository.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
-import 'package:keeptrack/src/features/user/presentation/user_home/last_result.dart';
+import 'package:keeptrack/src/features/user/presentation/user_home/last_result_widget/last_result.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/last_track_driven.dart';
-import 'package:keeptrack/src/features/user/presentation/user_home/objectifs_carousel.dart';
+import 'package:keeptrack/src/features/user/presentation/user_home/objectifs_widget/objectifs_carousel.dart';
 import 'package:keeptrack/theme/theme.dart';
 
 class UserHomeScreen extends ConsumerWidget {
@@ -23,7 +23,7 @@ class UserHomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final usersAsync = ref.watch(usersListFutureProvider);
+    final usersListValue = ref.watch(usersListFutureProvider);
     final size = MediaQuery.sizeOf(context);
 
     return DefaultTabController(
@@ -68,12 +68,11 @@ class UserHomeScreen extends ConsumerWidget {
                 ),
                 gapH32,
                 Expanded(
-                  child: usersAsync.when(
+                  child: usersListValue.when(
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
-                    error: (error, stackTrace) => const Center(
-                      child: Text('Erreur de chargement de l’utilisateur'),
-                    ),
+                    error: (error, stackTrace) =>
+                        Center(child: Center(child: Text(error.toString()))),
                     data: (users) {
                       if (users.isEmpty) {
                         return const Center(

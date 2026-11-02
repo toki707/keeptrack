@@ -6,13 +6,13 @@ import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
-class CircuitService {
+class NodejsCircuitsRepository {
   static const url = 'http://127.0.0.1:3000';
   final circuits = <Circuit>[];
 
-  Future<List<Circuit>> fetchCircuitList() async {
+  Future<List<Circuit>> fetchCircuitsList() async {
     try {
-      final parsedUrl = Uri.parse('$url/circuits');
+      final parsedUrl = Uri.parse('$url/api/circuits');
       final response = await http.get(parsedUrl);
       final statusCode = response.statusCode;
       if (statusCode != 200) {
@@ -21,11 +21,11 @@ class CircuitService {
       }
       final data = jsonDecode(response.body) as List;
       circuits.clear();
-      for (final v in data) {
-        circuits.add(Circuit.fromJson(v as Map<String, dynamic>));
+      for (final circuitJson in data) {
+        circuits.add(Circuit.fromJson(circuitJson as Map<String, dynamic>));
       }
       return circuits;
-    } catch (e) {
+    } catch (erreur) {
       rethrow;
     }
   }
@@ -33,14 +33,20 @@ class CircuitService {
   Circuit fetchCircuitById(String circuitId) {
     return circuits.firstWhere((circuit) => circuit.id == circuitId);
   }
+
+  Circuit fetchCircuitByName(String? circuitName) {
+    return circuits.firstWhere((circuit) => circuit.name == circuitName);
+  }
 }
 
-final circuitsRepositoryProvider = Provider<CircuitService>((ref) {
-  return CircuitService();
+final nodejsCircuitsRepositoryProvider = Provider<NodejsCircuitsRepository>((
+  ref,
+) {
+  return NodejsCircuitsRepository();
 });
 
 final circuitsListFutureProvider = FutureProvider<List<Circuit>>((ref) {
-  final circuitRepository = ref.watch(circuitsRepositoryProvider);
+  final circuitsRepository = ref.watch(nodejsCircuitsRepositoryProvider);
 
-  return circuitRepository.fetchCircuitList();
+  return circuitsRepository.fetchCircuitsList();
 });

@@ -4,12 +4,12 @@ import 'package:keeptrack/src/common_widget/app_background.dart';
 import 'package:keeptrack/src/common_widget/my_app_bar.dart';
 import 'package:keeptrack/src/common_widget/section_title.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
-import 'package:keeptrack/src/features/circuit/data/remote/circuit_remote.dart';
+import 'package:keeptrack/src/features/circuit/data/remote/nodejs_circuits_repository.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/car_result_card.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/circuit_infos.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/modal_bottom_sheet/bottom_sheet_add_voiture.dart';
 import 'package:keeptrack/src/features/circuit/presentation/circuit_detail/track_pres.dart';
-import 'package:keeptrack/src/features/user/data/remote/user_remote.dart';
+import 'package:keeptrack/src/features/user/data/remote/nodejs_users_repository.dart';
 import 'package:keeptrack/src/features/user/domain/voiture_performance.dart';
 import 'package:keeptrack/theme/theme.dart';
 
@@ -30,10 +30,9 @@ class CircuitDetailScreen extends ConsumerWidget {
         body: Center(child: Text('Erreur de chargement du circuit')),
       ),
       data: (circuits) {
-        final circuit = circuits.firstWhere(
-          (item) => item.id == circuitId,
-          orElse: () => throw StateError('Circuit introuvable : $circuitId'),
-        );
+        final circuit = ref
+            .read(nodejsCircuitsRepositoryProvider)
+            .fetchCircuitById(circuitId);
 
         return usersAsync.when(
           loading: () =>
@@ -42,22 +41,17 @@ class CircuitDetailScreen extends ConsumerWidget {
             body: Center(child: Text('Erreur de chargement de l’utilisateur')),
           ),
           data: (users) {
-            final currentUser = users.isNotEmpty
-                ? users.firstWhere(
-                    (user) => user.id == '1',
-                    orElse: () => users.first,
-                  )
-                : null;
-
-            if (currentUser == null) {
+            if (users.isEmpty) {
               return const Scaffold(
                 body: Center(child: Text('Aucun utilisateur disponible')),
               );
             }
 
+            final currentUser = users.first;
+
             final List<VoiturePerformance> voituresDuCircuit = currentUser
                 .performances
-                .where((performance) => performance.circuit.id == circuit.id)
+                .where((performance) => performance.circuit.name == circuit.name)
                 .expand((performance) => performance.voitures)
                 .toList();
 

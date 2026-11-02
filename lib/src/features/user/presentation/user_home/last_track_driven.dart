@@ -1,21 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeptrack/src/common_widget/flag_avatar.dart';
 import 'package:keeptrack/src/common_widget/styled_text.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
+import 'package:keeptrack/src/features/circuit/data/remote/nodejs_circuits_repository.dart';
 import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 import 'package:keeptrack/theme/theme.dart';
 
-class LastTrackDriven extends StatelessWidget {
+class LastTrackDriven extends ConsumerWidget {
   const LastTrackDriven(this.circuit, {super.key});
 
   final Circuit circuit;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final circuitsAsync = ref.watch(circuitsListFutureProvider);
+
     return GestureDetector(
-      onTap: () =>
-          context.goNamed("circuitDetail", pathParameters: {'id': circuit.id}),
+      onTap: () {
+        if (!circuitsAsync.hasValue) return;
+
+        final circuitComplet = ref
+            .read(nodejsCircuitsRepositoryProvider)
+            .fetchCircuitByName(circuit.name);
+
+        context.goNamed(
+          "circuitDetail",
+          pathParameters: {'id': circuitComplet.id!},
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: Sizes.p4),
         child: ClipRRect(
@@ -67,7 +81,7 @@ class LastTrackDriven extends StatelessWidget {
                       mainAxisAlignment: .center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        StyledText(circuit.name),
+                        StyledText(circuit.name!),
                         SizedBox(
                           width: Sizes.p120,
                           child: StyledText(

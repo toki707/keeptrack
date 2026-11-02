@@ -1,18 +1,18 @@
 import 'package:keeptrack/src/features/voiture/domain/specs.dart';
 
 class Voiture {
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   final String? brand;
   final String? description;
   final List<String>? tags;
   final String? classCar;
   final Specs? specs;
-  final String preview;
+  final String? preview;
 
   Voiture({
-    required this.id,
-    required this.name,
+    this.id,
+    this.name,
     this.brand,
     this.description,
     this.tags,
@@ -22,15 +22,15 @@ class Voiture {
   });
 
   factory Voiture.fromJson(Map<String, dynamic> json) {
-    final id = json['id'];
-    if (id == null || id is! String) {
+    final id = json['_id'];
+    if (id != null && id is! String?) {
       throw FormatException(
         "Le Json est invalide : id doit être de type String dans $json",
       );
     }
 
     final name = json['name'];
-    if (name == null || name is! String) {
+    if (name != null && name is! String?) {
       throw FormatException(
         "Le Json est invalide : name doit être de type String dans $json",
       );
@@ -62,21 +62,21 @@ class Voiture {
     final specs = json['specs'] as Map<String, dynamic>?;
 
     final preview = json['preview'];
-    if (preview == null || preview is! String) {
+    if (preview != null && preview is! String?) {
       throw FormatException(
         "Le Json est invalide : preview doit être de type String dans $json",
       );
     }
 
     return Voiture(
-      id: id,
-      name: name,
+      id: id as String?,
+      name: name as String?,
       brand: brand as String?,
       description: description as String?,
       tags: tags?.cast<String>().toList(),
       classCar: classCar as String?,
       specs: specs != null ? Specs.fromJson(specs) : null,
-      preview: preview,
+      preview: preview as String?,
     );
   }
 }

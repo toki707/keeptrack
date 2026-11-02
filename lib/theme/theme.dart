@@ -17,6 +17,7 @@ class AppColors {
   static const Color textLight = Color.fromARGB(188, 255, 255, 255);
   static const Color textLabel = Color.fromARGB(164, 255, 255, 255);
   static const Color textMuted = Color.fromARGB(150, 255, 255, 255);
+  static const Color textBestLap = Color.fromARGB(255, 174, 0, 255);
 
   // Cartes et boîtes
   static const Color cardColor = Color.fromARGB(148, 19, 19, 19);
@@ -58,11 +59,14 @@ class AppColors {
   static const Color inputLabel = Colors.white70;
 
   // Objectif
-  static const Color objectifOrange = Color.fromARGB(255, 255, 157, 77);
   static const Color objectifLabel = Color.fromARGB(255, 201, 184, 184);
   static const Color objectifCardColor = Color.fromARGB(9, 255, 255, 255);
   static const Color objectifCardBorder = Color.fromARGB(31, 255, 255, 255);
   static const Color progressBackground = Color.fromARGB(26, 255, 255, 255);
+
+  // graphique
+  static const Color lapFaster = Color.fromARGB(105, 17, 255, 0);
+  static const Color lapSlower = Color.fromARGB(115, 255, 1, 1);
 }
 
 ThemeData primaryTheme = ThemeData(

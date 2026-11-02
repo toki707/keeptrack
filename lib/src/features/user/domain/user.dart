@@ -3,8 +3,8 @@ import 'package:keeptrack/src/features/user/domain/performance.dart';
 import 'objectif.dart';
 
 class User {
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   final List<Performance> performances;
   final List<Objectif> objectifs;
 
@@ -30,8 +30,8 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
-    final id = json['id'];
-    if (id == null || id is! String) {
+    final id = json['_id'];
+    if (id != null && id is! String?) {
       throw FormatException(
         "Le Json est invalide : id doit être de type String dans $json",
       );
@@ -54,8 +54,8 @@ class User {
     final objectifs = json['objectifs'] as List?;
 
     return User(
-      id: id,
-      name: name,
+      id: id as String?,
+      name: name as String?,
       performances: performances
           .cast<Map<String, dynamic>>()
           .map((performanceData) => Performance.fromJson(performanceData))

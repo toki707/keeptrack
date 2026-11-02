@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/theme/theme.dart';
 
-
 class StyledCard extends StatelessWidget {
   const StyledCard({
     super.key,
@@ -23,7 +22,6 @@ class StyledCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       padding: padding,
       decoration: BoxDecoration(
         color: color,
