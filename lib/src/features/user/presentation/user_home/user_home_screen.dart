@@ -10,6 +10,7 @@ import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
 import 'package:keeptrack/src/features/circuit/presentation/list_circuits/list_circuits_screen.dart';
 import 'package:keeptrack/src/features/user/data/remote/nodejs_users_repository.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
+import 'package:keeptrack/src/features/user/presentation/profile/profile_screen.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/last_result_widget/last_result.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/last_track_driven.dart';
 import 'package:keeptrack/src/features/user/presentation/user_home/objectifs_widget/objectifs_carousel.dart';
@@ -86,7 +87,7 @@ class UserHomeScreen extends ConsumerWidget {
                         children: [
                           HomeScreen(currentUser),
                           ListCircuitsScreen(),
-                          Placeholder(),
+                          ProfileScreen(),
                         ],
                       );
                     },
