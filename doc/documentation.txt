@@ -423,3 +423,483 @@ RECIT 2 : AJOUTER UNE PERFORMANCE A UN USER
 	
 	4) Le return TextEditingValue(...)
 Renvoie la nouvelle valeur du champ texte : text: formatted est le texte affiché (formaté), et selection: TextSelection.collapsed(offset: formatted.length) replace le curseur à la fin du texte formaté — sans ça, le curseur resterait à sa position d'origine (avant le formatage) et sauterait de façon incohérente à chaque frappe.
+
+
+19.10.2026
+
+SPRINT 3
+
+Ici le but et de pouvoir planifier toute les tâches à réaliser pour pouvoir remplir toute mes 
+
+Récit n°3 : Je pouvoir voir la liste de tous les circuits
+	
+	- créer la page listCircuitsScreen avec une liste de widget
+
+Récit n°4 : je veux pouvoir trouver un circuit  à l'aide d'une barre de recherche
+
+	- Développer un SearchBar pour pouvoir rechercher un circuit
+
+Récit n°5: Je veux pouvoir naviguer en plusieurs page à l'aide d'une bar de menu
+
+	- Développer la barre de navigation 
+	
+	
+	idée pour la page home :
+		
+		- voiture la plus roulée
+		- circuit le plus roulé
+		- tours le plus long / court
+
+	BDD avec nos infos (335)
+	
+	mettre ne place une base de données NodeJS 
+	me mettre en centre de mon appli
+	/!\ possible que le page de profil sois une page de config 
+	mettre ne place des tests
+	trello
+	planife
+	mail
+
+
+	
+
+22.10.2026
+
+RECIT 6 : AFFICHER LES OBJECTIFS DE L'UTILISATEUR
+
+	Sur la page home il manquait encore quelque chose qui donne vraiment envie à l'utilisateur de revenir
+	sur l'appli. Afficher ses temps c'est bien, mais au final ça reste juste des chiffres. Donc je me suis
+	dit que se serait pas mal d'avoir des objectifs, genre "passer sous 1:40.000 à Spa avec la Ferrari",
+	avec une barre de progression qui montre ou on en est.
+
+	a) La classe Objectif
+
+	J'ai commencé par la partie domain avec une nouvelle classe Objectif. Un objectif c'est toujours un
+	circuit, une voiture, un temps de départ et un temps cible :
+
+		class Objectif {
+		  Objectif({
+			required this.circuit,
+			required this.voiture,
+			required this.tempsCible,
+			required this.tempsDepart,
+		  });
+
+		  final Circuit circuit;
+		  final Voiture voiture;
+		  final String tempsCible;
+		  final String tempsDepart;
+		}
+
+	Le tempsDepart c'est le meilleur temps que l'utilisateur avait au moment ou il a créer l'objectif.
+	Au début je l'avais pas mis, mais je me suis vite rendu compte que sans lui c'est impossible de
+	calculer un pourcentage, parce que on sait pas d'où on part.
+
+	Pour le fromJson j'ai fait exactement comme pour les autres classes vu dans le 294 : on récupère
+	chaque champ, on vérifie qu'il est pas null et qu'il a le bon type, sinon on lance une FormatException.
+
+		final tempsCible = json['tempsCible'];
+		if (tempsCible == null || tempsCible is! String) {
+		  throw FormatException(
+			"Le Json est invalide : tempsCible doit être de type String dans $json",
+		  );
+		}
+
+	Ensuite j'ai ajouter une List<Objectif> objectifs dans la classe User. Comme certains users dans le
+	JSON n'ont pas encore d'objectifs, si le champ n'existe pas je renvoie une liste vide au lieu de
+	faire planter toute l'appli :
+
+		objectifs: objectifs != null
+			? objectifs
+				  .cast<Map<String, dynamic>>()
+				  .map((objectifData) => Objectif.fromJson(objectifData))
+				  .toList()
+			: <Objectif>[],
+
+	b) Calculer la progression
+
+	C'est la partie qui m'a demandé le plus de réflexion. Les temps sont stocké en String ("1:41.234"),
+	donc on peut pas les comparer ou les soustraire directement. J'avais déjà la méthode tempsEnMs()
+	dans VoiturePerformance qui transforme un temps en millisecondes, donc je l'ai réutilisée pour
+	écrire progressionObjectif() :
+
+		double progressionObjectif(Objectif objectif, String meilleurTempsActuel) {
+		  final depart = tempsEnMs(objectif.tempsDepart);
+		  final cible = tempsEnMs(objectif.tempsCible);
+		  final actuel = tempsEnMs(meilleurTempsActuel);
+
+		  if (depart <= cible) {                                                    //1
+			return 1.0;
+		  }
+
+		  return ((depart - actuel) / (depart - cible)).clamp(0.0, 1.0);           //2
+		}
+
+	1) Si le temps de départ est déjà plus rapide que la cible, l'objectif est déjà atteint, donc je
+	renvoie 1.0 (100%). Ça évite aussi de diviser par 0 si les deux temps sont pareils.
+
+	2) C'est une simple règle de trois : (ce que j'ai déjà gagné) / (ce que je dois gagner au total).
+	Par exemple si je pars de 1:45.000, que la cible est 1:40.000 et que mon record est 1:42.500,
+	j'ai gagné 2.5 secondes sur 5, donc 0.5 = 50%. Le clamp(0.0, 1.0) bloque le résultat entre 0 et 1,
+	comme ça même si l'utilisateur est plus lent qu'au départ ou qu'il dépasse l'objectif, la barre
+	ne sort jamais de son cadre.
+
+	c) ObjectifCard
+
+	Pour l'affichage j'ai créé un widget ObjectifCard qui reçoit un Objectif et la liste des
+	performances du user. Le premier problème c'était de retrouver les temps qui correspondent à
+	l'objectif, donc le bon circuit ET la bonne voiture. J'ai fait une méthode
+	_trouverVoiturePerformance() avec deux where() à la suite :
+
+		VoiturePerformance? _trouverVoiturePerformance() {
+		  final performancesCircuit = performances.where(
+			(performance) => performance.circuit.name == objectif.circuit.name,
+		  );
+		  if (performancesCircuit.isEmpty) {
+			return null;
+		  }
+
+		  final voitures = performancesCircuit.first.voitures.where(
+			(voiturePerformance) =>
+				voiturePerformance.voiture.name == objectif.voiture.name,
+		  );
+		  if (voitures.isEmpty) {
+			return null;
+		  }
+
+		  return voitures.first;
+		}
+
+	J'ai mis un ? après VoiturePerformance parce que la méthode peut renvoyer null si
+	l'utilisateur n'a encore jamais roulé sur ce circuit avec cette voiture. Dans ce cas la carte
+	affiche juste "Aucun temps enregistré a ..." au lieu de planter.
+
+	Réflexion : au début je comparais les circuits avec leur id, mais ça marchait pas du tout.
+	Les circuits qui sont stockés dans le user n'ont pas d'id, donc null == null était toujours
+	vrai et la carte prenait les temps du mauvais circuit (Spa affichait les temps de Monza). J'ai
+	donc changé pour comparer avec le name, qui lui est toujours rempli.
+
+	Pour la barre de progression j'ai utilisé un Container gris pour le fond et à l'intérieur un
+	FractionallySizedBox :
+
+		Container(
+		  height: Sizes.p12,
+		  decoration: BoxDecoration(
+			color: AppColors.progressBackground,
+			borderRadius: BorderRadius.circular(Sizes.p8),
+		  ),
+		  alignment: .centerLeft,
+		  child: FractionallySizedBox(
+			widthFactor: progression,
+			child: Container(
+			  decoration: BoxDecoration(
+				borderRadius: BorderRadius.circular(Sizes.p8),
+				gradient: LinearGradient(
+				  colors: [AppColors.primaryColor, AppColors.primaryAccent],
+				),
+			  ),
+			),
+		  ),
+		),
+
+	Le FractionallySizedBox prend un pourcentage de la place de son parent avec widthFactor. Comme
+	progressionObjectif() renvoie déjà un nombre entre 0 et 1, je peux le donner directement sans
+	rien calculer de plus. Le alignment: .centerLeft est important sinon la barre se remplis depuis
+	le milieu. J'ai mis un dégradé rouge (LinearGradient) pour rester dans les couleurs de l'appli.
+
+	En bas de la carte j'affiche le record actuel et l'écart avec la cible :
+
+		final ecartMs =
+			voiturePerformance.tempsEnMs(meilleurTemps) -
+			voiturePerformance.tempsEnMs(objectif.tempsCible);
+		final objectifAtteint = ecartMs <= 0;
+
+	Si l'écart est négatif ou égal à 0 ça veut dire que le record est plus rapide que la cible, donc
+	j'affiche "Objectif atteint !", sinon "encore 1.234 s" avec un toStringAsFixed(3) pour garder
+	les millièmes.
+
+	d) ObjectifsCarousel
+
+	Comme un utilisateur peut avoir plusieurs objectifs, je voulais pas les afficher les uns en
+	dessous des autres parce que la page home deviendrait beaucoup trop longue. J'ai donc fait un
+	carrousel avec un PageView.builder, on glisse à gauche ou à droite pour changer d'objectif.
+
+	Le carrousel est un StatefulWidget parce qu'il doit se souvenir de la page affichée (pageActuelle)
+	pour les petits points en dessous :
+
+		onPageChanged: (index) {
+		  setState(() {
+			pageActuelle = index;
+		  });
+		},
+
+		for (int numeroPage = 0; numeroPage < widget.objectifs.length; numeroPage++)
+		  AnimatedContainer(
+			duration: Duration(milliseconds: 250),
+			width: numeroPage == pageActuelle ? Sizes.p20 : Sizes.p8,
+			...
+		  ),
+
+	Chaque fois qu'on change de page, onPageChanged met à jour pageActuelle avec un setState, et le
+	point de la page active devient plus large et rouge. J'ai utilisé un AnimatedContainer au lieu
+	d'un Container normal pour que le changement de taille se fasse avec une petite animation de
+	250 millisecondes au lieu d'un saut d'un coup. Le PageController est aussi libéré dans le
+	dispose() comme on a vu dans le cours pour les TextEditingController.
+
+
+27.10.2026
+
+CONNECTER LE CLIENT AVEC LE SERVEUR (GET)
+
+	Jusqu'à maintenant toute l'appli marchait avec les Fake repositories et les données en dur dans
+	les fichiers test_. Le but de cette étape c'était de lire les vraies données qui viennent de
+	mon serveur NodeJS et de la base MongoDB. Pour l'instant je m'occupe seulement du GET, l'ajout
+	d'une performance continue de passer par le FakeUsersRepository en local, ce sera fait plus tard.
+
+	a) Côté serveur
+
+	Le serveur est découpé en 3 parties comme vu dans le 295 : les routes, les controllers et les
+	models. Par exemple pour les circuits, la route dit juste quelle fonction appeler :
+
+		router.get("/circuits", getAllCricuits);
+
+	Et le controller va chercher tous les circuits dans la base avec mongoose :
+
+		export const getAllCricuits = async (req, res) => {
+			try {
+				const circuits = await CircuitModel.find();
+				res.status(200).json(circuits);
+			} catch (err) {
+				console.log(err);
+				res.status(500).json("Server Error");
+			}
+		};
+
+	J'ai fait la même chose pour les voitures et les users, et toutes les routes sont regroupées
+	derrière /api dans index.js (/api/circuits, /api/voitures, /api/users).
+
+	Un problème que j'ai eu c'est que Flutter Web refusait de lire les réponses du serveur, à cause
+	du CORS (le navigateur bloque les requêtes vers un autre port). J'ai réglé ça avec un petit
+	middleware qui ajoute les bons headers à chaque réponse :
+
+		app.use((req, res, next) => {
+			res.setHeader("Access-Control-Allow-Origin", "*")
+			res.setHeader("Access-Control-Allow-Methods", "GET")
+			res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+			next();
+		});
+
+	b) Côté client : les repositories Nodejs
+
+	Dans chaque feature j'ai créé un dossier data/remote avec un nouveau repository, par exemple
+	NodejsCircuitsRepository. Il fait la requête avec le package http et transforme le JSON reçu
+	en objets Circuit :
+
+		Future<List<Circuit>> fetchCircuitsList() async {
+		  try {
+			final parsedUrl = Uri.parse('$url/api/circuits');
+			final response = await http.get(parsedUrl);                              //1
+			final statusCode = response.statusCode;
+			if (statusCode != 200) {                                                  //2
+			  final message = 'Erreur survenue';
+			  throw Exception(message);
+			}
+			final data = jsonDecode(response.body) as List;                           //3
+			circuits.clear();
+			for (final circuitJson in data) {
+			  circuits.add(Circuit.fromJson(circuitJson as Map<String, dynamic>));
+			}
+			return circuits;
+		  } catch (erreur) {
+			rethrow;
+		  }
+		}
+
+	1) http.get() envoie la requête au serveur. Comme ça prend du temps, la méthode est async et on
+	met un await pour attendre la réponse avant de continuer.
+
+	2) Si le serveur répond autre chose que 200 (par exemple 500 si la base plante), on lance une
+	Exception pour que l'appli sache qu'il y a eu un problème.
+
+	3) jsonDecode() transforme le texte reçu en vraie liste Dart, ensuite on passe chaque élément
+	dans le fromJson() qu'on avait déjà écrit pour les Fake repositories. C'est la que j'ai vu
+	l'intérêt d'avoir fait des fromJson propres dès le début, j'ai rien eu à changer dans le domain.
+
+	Je garde aussi la liste circuits dans le repository, comme ça les méthodes fetchCircuitById()
+	et fetchCircuitByName() peuvent chercher dedans avec un firstWhere() sans refaire une requête
+	au serveur à chaque fois.
+
+	c) Les FutureProvider
+
+	Comme les données arrivent maintenant de façon asynchrone, un simple Provider ne suffisait plus.
+	J'ai utilisé un FutureProvider comme vu dans le cours sur Riverpod :
+
+		final circuitsListFutureProvider = FutureProvider<List<Circuit>>((ref) {
+		  final circuitsRepository = ref.watch(nodejsCircuitsRepositoryProvider);
+
+		  return circuitsRepository.fetchCircuitsList();
+		});
+
+	Et dans les pages, au lieu de recevoir directement la liste, on reçoit un AsyncValue qu'on
+	affiche avec .when(), qui gère les 3 cas possibles :
+
+		usersListValue.when(
+		  loading: () => const Center(child: CircularProgressIndicator()),
+		  error: (error, stackTrace) => Center(child: Text(error.toString())),
+		  data: (users) { ... },
+		),
+
+	C'est beaucoup mieux que avant parce que si le serveur est éteint, l'appli affiche une erreur
+	au lieu d'un écran rouge.
+
+	d) Le bug du dernier circuit roulé
+
+	Après avoir passé sur le serveur, quand je cliquait sur un "dernier circuit roulé" il se
+	passait plus rien du tout. En cherchant j'ai compris que c'était encore le même problème que
+	pour les objectifs : MongoDB donne un _id aux circuits de la collection circuits, mais les
+	circuits qui sont rangés à l'intérieur du user n'en ont pas. Donc circuit.id! était null et
+	l'appli plantait au moment du goNamed().
+
+	La solution c'était de retrouver le circuit complet (celui qui a un id) dans la liste du
+	repository à partir de son nom, puis de naviguer avec cet id :
+
+		onTap: () {
+		  if (!circuitsAsync.hasValue) return;
+
+		  final circuitComplet = ref
+			  .read(nodejsCircuitsRepositoryProvider)
+			  .fetchCircuitByName(circuit.name);
+
+		  context.goNamed(
+			"circuitDetail",
+			pathParameters: {'id': circuitComplet.id!},
+		  );
+		},
+
+	Le if (!circuitsAsync.hasValue) return; sert à rien faire si la liste des circuits n'est pas
+	encore chargée, sinon le firstWhere() chercherait dans une liste vide et ça planterait.
+
+	Réflexion : pour l'instant l'appli affiche les users du serveur mais l'ajout d'une performance
+	écrit dans le FakeUsersRepository, donc un temps ajouté ne s'affiche pas encore. Il faudra faire
+	une route POST sur le serveur pour régler ça.
+
+
+02.11.2026
+
+GRAPHIQUE DES TEMPS AU TOUR (EN DUR)
+
+	Pour rendre la carte "Dernier résultat" plus visuelle, je voulais un graphique qui montre tous
+	les tours de la dernière session, avec en vert les tours plus rapides que la moyenne et en rouge
+	ceux plus lents, et le meilleur tour mis en avant en violet.
+
+	a) La dépendance fl_chart
+
+	Faire un graphique à la main avec des Container ça serait beaucoup trop long, donc j'ai utilisé
+	la dépendance fl_chart, que j'ai ajoutée dans le pubspec.yaml comme pour http :
+
+		dependencies:
+		  http: ^1.6.0
+		  fl_chart: ^1.3.0
+
+	Puis un flutter pub get pour la télécharger. fl_chart propose plein de graphiques (lignes,
+	barres, camembert...) et j'ai testé les exemples dans mon dossier Spike. Je me suis basé sur
+	line_chart_sample4.dart parce que c'est celui qui a déjà une zone colorée différente au dessus
+	et en dessous d'une ligne, exactement ce que je voulais pour la moyenne.
+
+	b) Pourquoi en dur
+
+	Dans ma planif, le graphique est seulement visuel pour ce sprint, le but c'est de voir le widget
+	en place sur la page home. Donc pour aller plus vite j'ai mis toutes les valeurs directement dans
+	le widget au lieu de les calculer depuis VoiturePerformance :
+
+		class LapTimesChart extends StatelessWidget {
+		  const LapTimesChart({super.key});
+
+		  static const points = [
+			FlSpot(0, -102.3),
+			FlSpot(1, -101.1),
+			FlSpot(2, -100.2),
+			FlSpot(3, -99.5),
+			FlSpot(4, -100.8),
+			FlSpot(5, -101.6),
+			FlSpot(6, -100.0),
+		  ];
+		  static const moyenne = -100.8;
+		  static const indexMeilleur = 3;
+		  ...
+		}
+
+	Les variables sont en static const parce que elles changent jamais et qu'elles sont pareilles
+	pour tous les LapTimesChart. Dans last_result.dart il suffit de faire const LapTimesChart().
+
+	c) Les points et l'astuce des valeurs négatives
+
+	Un FlSpot c'est un point avec un x et un y. Le x c'est le numéro du tour (0 = T1, 1 = T2...) et
+	le y c'est le temps en secondes (1:42.3 = 102.3 secondes).
+
+	Réflexion : dans un graphique normal, plus la valeur est grande plus le point est haut. Mais pour
+	un temps au tour c'est l'inverse, un petit temps c'est un bon tour et je voulais que les bons
+	tours soient en haut. Donc j'ai mis les secondes en négatif : -99.5 est plus grand que -102.3,
+	donc le meilleur tour se retrouve bien tout en haut. Pour pas afficher des "-1:42" sur l'axe, la
+	fonction leftTitleWidgets() remet le signe à l'endroit avec -value.toInt() avant de formater en
+	minutes:secondes.
+
+	Comme les valeurs sont très proches (entre 99 et 103), j'ai aussi fixé minY: -103 et maxY: -99,
+	sinon fl_chart commence l'axe trop bas et la courbe est toute plate.
+
+	d) Les zones vertes et rouges
+
+	C'est la partie reprise du sample4. Dans LineChartBarData il y a belowBarData (la zone sous la
+	ligne) et aboveBarData (la zone au dessus) :
+
+		belowBarData: BarAreaData(
+		  show: true,
+		  color: AppColors.lapFaster,
+		  cutOffY: moyenne,
+		  applyCutOffY: true,
+		),
+		aboveBarData: BarAreaData(
+		  show: true,
+		  color: AppColors.lapSlower,
+		  cutOffY: moyenne,
+		  applyCutOffY: true,
+		),
+
+	Le cutOffY dit à fl_chart de colorier seulement jusqu'à la ligne de la moyenne au lieu d'aller
+	jusqu'en bas du graphique. Résultat : quand la courbe passe au dessus de la moyenne la zone est
+	verte (tour plus rapide), et quand elle passe en dessous elle est rouge (tour plus lent). Les
+	deux couleurs lapFaster et lapSlower sont ajoutées dans AppColors pour rester dans le thème.
+
+	e) Le meilleur tour en violet
+
+		dotData: FlDotData(
+		  show: true,
+		  checkToShowDot: (spot, barData) {
+			return spot.x == indexMeilleur;
+		  },
+		  getDotPainter: (spot, percent, barData, index) {
+			return FlDotCirclePainter(
+			  radius: 5.5,
+			  color: AppColors.textBestLap,
+			  strokeColor: AppColors.textColor,
+			  strokeWidth: 2,
+			);
+		  },
+		),
+
+	checkToShowDot est appelé pour chaque point et renvoie true seulement pour le meilleur tour,
+	donc un seul rond s'affiche. getDotPainter dit à quoi ressemble ce rond (violet avec un contour
+	blanc, la même couleur que les meilleurs temps dans le reste de l'appli). En plus de ça, dans
+	extraLinesData j'ai ajouté une HorizontalLine en pointillé pour la moyenne et une VerticalLine
+	violette sur le meilleur tour, avec dashArray: [6, 5] qui veut dire 6 pixels de trait et 5 de vide.
+
+	f) Les titres des axes
+
+	Avec titlesData je cache les titres en haut et à droite, et pour en bas et à gauche je donne mes
+	propres fonctions bottomTitleWidgets() et leftTitleWidgets(). En bas elles affichent "T1", "T2"...
+	avec value.toInt() + 1 parce que le x commence à 0, et le tour le plus rapide est écrit en violet.
+
+	Réflexion : le graphique en dur montre toujours les mêmes tours, peu importe la session. Pour le
+	prochain sprint il faudra remettre un paramètre VoiturePerformance dans le widget et créer les
+	points avec une boucle sur voiturePerformance.temps, calculer la moyenne avec moyenneEnMs et le
+	meilleur tour avec indexMeilleurTemps. Le reste du widget (couleurs, zones, axes) ne changera pas.
