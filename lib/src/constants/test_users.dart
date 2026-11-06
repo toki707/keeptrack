@@ -8,7 +8,7 @@ import 'package:keeptrack/src/features/voiture/domain/voiture.dart';
 List<User> testUsers = [
   User(
     id: "1",
-    name: "cp-24jon",
+    name: "Toki707",
     performances: [
       Performance(
         circuit: Circuit(

@@ -87,7 +87,7 @@ class UserHomeScreen extends ConsumerWidget {
                         children: [
                           HomeScreen(currentUser),
                           ListCircuitsScreen(),
-                          ProfileScreen(),
+                          ProfileScreen(currentUser),
                         ],
                       );
                     },
