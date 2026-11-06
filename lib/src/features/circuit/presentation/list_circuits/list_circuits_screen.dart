@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:keeptrack/src/common_widget/styled_text.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
-import 'package:keeptrack/src/features/circuit/data/fake_circuits_repository.dart';
-import 'package:keeptrack/src/features/circuit/domain/circuit.dart';
+import 'package:keeptrack/src/features/circuit/data/remote/nodejs_circuits_repository.dart';
 import 'package:keeptrack/src/features/circuit/presentation/list_circuits/circuit_card.dart';
 import 'package:keeptrack/theme/theme.dart';
 
@@ -16,77 +15,78 @@ class ListCircuitsScreen extends ConsumerStatefulWidget {
 
 class _ListCircuitsScreenState extends ConsumerState<ListCircuitsScreen> {
   String _searchText = '';
-  List<Circuit> _filteredCircuits = [];
 
   @override
   Widget build(BuildContext context) {
-    final circuitsRepository = ref.watch(fakeCircuitsRepositoryProvider);
-    final circuits = circuitsRepository.getCircuitsList();
+    final circuitsAsync = ref.watch(circuitsListFutureProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(Sizes.p16),
-            child: SearchBar(
-              hintText: "Rechercher...",
-              hintStyle: WidgetStatePropertyAll(
-                TextStyle(color: AppColors.searchHint, fontSize: Sizes.p20),
-              ),
-              leading: Icon(Icons.search, color: AppColors.searchHint),
-              backgroundColor: WidgetStatePropertyAll(
-                AppColors.searchBackground,
-              ),
-              textStyle: WidgetStatePropertyAll(
-                TextStyle(color: AppColors.textColor, fontSize: Sizes.p20),
-              ),
-              shadowColor: WidgetStatePropertyAll(Colors.transparent),
-              side: WidgetStatePropertyAll(
-                BorderSide(color: AppColors.searchBorder, width: 2),
-              ),
-              onChanged: (text) {
-                setState(() {
-                  _searchText = text;
-                  if (text.isNotEmpty) {
-                    _filteredCircuits = circuits
-                        .where(
-                          (circuit) => circuit.name.toLowerCase().contains(
-                            text.toLowerCase(),
-                          ),
-                        )
-                        .toList();
-                  } else {
-                    StyledText("Aucun circuit trouvé", fontSize: Sizes.p20);
-                  }
-                });
-              },
-            ),
+      body: circuitsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(
+          child: StyledText(
+            'Erreur de chargement des circuits',
+            fontSize: Sizes.p20,
           ),
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
-              itemCount: _searchText.isEmpty
-                  ? circuits.length
-                  : _filteredCircuits.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: Sizes.p12,
-                mainAxisSpacing: Sizes.p12,
-                childAspectRatio: 1.5,
-              ),
-              itemBuilder: (context, index) {
-                if (_searchText.isEmpty) {
-                  final circuit = circuits[index];
-                  return CircuitCard(circuit);
-                }
+        ),
+        data: (circuits) {
+          final displayedCircuits = _searchText.isEmpty
+              ? circuits
+              : circuits
+                    .where(
+                      (circuit) => circuit.name!.toLowerCase().contains(
+                        _searchText.toLowerCase(),
+                      ),
+                    )
+                    .toList();
 
-                final circuit = _filteredCircuits[index];
-                return CircuitCard(circuit);
-              },
-            ),
-          ),
-        ],
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(Sizes.p16),
+                child: SearchBar(
+                  hintText: "Rechercher...",
+                  hintStyle: WidgetStatePropertyAll(
+                    TextStyle(color: AppColors.searchHint, fontSize: Sizes.p20),
+                  ),
+                  leading: Icon(Icons.search, color: AppColors.searchHint),
+                  backgroundColor: WidgetStatePropertyAll(
+                    AppColors.searchBackground,
+                  ),
+                  textStyle: WidgetStatePropertyAll(
+                    TextStyle(color: AppColors.textColor, fontSize: Sizes.p20),
+                  ),
+                  shadowColor: WidgetStatePropertyAll(Colors.transparent),
+                  side: WidgetStatePropertyAll(
+                    BorderSide(color: AppColors.searchBorder, width: 2),
+                  ),
+                  onChanged: (text) {
+                    setState(() {
+                      _searchText = text;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
+                  itemCount: displayedCircuits.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: Sizes.p12,
+                    mainAxisSpacing: Sizes.p12,
+                    childAspectRatio: 1.5,
+                  ),
+                  itemBuilder: (context, index) {
+                    final circuit = displayedCircuits[index];
+                    return CircuitCard(circuit);
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:keeptrack/src/common_widget/styled_card.dart';
 import 'package:keeptrack/src/common_widget/styled_text.dart';
 import 'package:keeptrack/src/constants/app_sizes.dart';
 import 'package:keeptrack/src/features/user/domain/user.dart';
+import 'package:keeptrack/src/features/user/presentation/user_home/last_result_widget/lap_times_chart.dart';
 import 'package:keeptrack/theme/theme.dart';
 
 class LastResult extends StatelessWidget {
@@ -42,7 +43,7 @@ class LastResult extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       StyledText(
-                        lastPerformance.circuit.name,
+                        lastPerformance.circuit.name!,
                         fontSize: Sizes.p20,
                       ),
                       StyledText(
@@ -62,13 +63,37 @@ class LastResult extends StatelessWidget {
               ),
             ),
           ),
+          gapH16,
+          Row(
+            children: [
+              StyledText("Temps au tour", color: AppColors.textMuted),
+              Expanded(child: gapW4),
 
-          gapH24,
+              StyledCard(
+                color: AppColors.cardBorder,
+                borderColor: AppColors.tabBarBorder,
+                child: StyledText("7 tours", fontSize: Sizes.p12),
+              ),
+            ],
+          ),
+          gapH16,
+          LapTimesChart(),
+          gapH16,
           InfoLine(
             label: "Voiture",
-            value: lastVoiturePerformance.voiture.name,
+            value: "${lastVoiturePerformance.voiture.name}",
           ),
-          InfoLine(label: "Temps", value: lastVoiturePerformance.temps.last),
+          InfoLine(
+            label: "Meilleur temps",
+            value: lastVoiturePerformance.meilleurTemps,
+            valueColor: AppColors.textBestLap,
+          ),
+          InfoLine(
+            label: "Moyenne",
+            value: lastVoiturePerformance.formaterTemps(
+              lastVoiturePerformance.moyenneEnMs,
+            ),
+          ),
         ],
       ),
     );

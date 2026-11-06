@@ -19,7 +19,7 @@ class CarResultCard extends StatelessWidget {
             height: Sizes.p100,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(voiturePerformance.voiture.preview),
+                image: AssetImage(voiturePerformance.voiture.preview!),
               ),
               borderRadius: BorderRadius.all(Radius.circular(Sizes.p24)),
             ),
@@ -30,7 +30,7 @@ class CarResultCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              StyledText(voiturePerformance.voiture.name, fontSize: Sizes.p20),
+              StyledText(voiturePerformance.voiture.name!, fontSize: Sizes.p20),
 
               gapH12,
 

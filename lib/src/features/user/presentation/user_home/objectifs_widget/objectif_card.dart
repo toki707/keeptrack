@@ -15,7 +15,7 @@ class ObjectifCard extends StatelessWidget {
 
   VoiturePerformance? _trouverVoiturePerformance() {
     final performancesCircuit = performances.where(
-      (performance) => performance.circuit.id == objectif.circuit.id,
+      (performance) => performance.circuit.name == objectif.circuit.name,
     );
     if (performancesCircuit.isEmpty) {
       return null;
@@ -23,7 +23,7 @@ class ObjectifCard extends StatelessWidget {
 
     final voitures = performancesCircuit.first.voitures.where(
       (voiturePerformance) =>
-          voiturePerformance.voiture.id == objectif.voiture.id,
+          voiturePerformance.voiture.name == objectif.voiture.name,
     );
     if (voitures.isEmpty) {
       return null;

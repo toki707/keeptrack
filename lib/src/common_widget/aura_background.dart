@@ -23,13 +23,13 @@ class AuraBackground extends StatelessWidget {
   List<AuraSpot> _makeSpots() {
     assert(colors.length == points.length && colors.length == radiuses.length);
     List<AuraSpot> spots = [];
-    for (int i = 0; i < colors.length; i++) {
+    for (int numeroSpot = 0; numeroSpot < colors.length; numeroSpot++) {
       spots.add(
         AuraSpot(
-          color: colors[i],
-          radius: radiuses[i],
-          alignment: points[i],
-          blurRadius: radiuses[i] / 8,
+          color: colors[numeroSpot],
+          radius: radiuses[numeroSpot],
+          alignment: points[numeroSpot],
+          blurRadius: radiuses[numeroSpot] / 8,
         ),
       );
     }

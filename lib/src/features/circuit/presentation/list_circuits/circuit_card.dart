@@ -15,7 +15,7 @@ class CircuitCard extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () =>
-          context.goNamed("circuitDetail", pathParameters: {'id': circuit.id}),
+          context.goNamed("circuitDetail", pathParameters: {'id': circuit.id!}),
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -47,7 +47,7 @@ class CircuitCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: StyledText(
-                      circuit.name,
+                      circuit.name!,
                       fontSize: Sizes.p20,
                       maxLines: 1,
                     ),

@@ -17,6 +17,27 @@ class VoiturePerformance {
     );
   }
 
+  factory VoiturePerformance.fromJson(Map<String, dynamic> json) {
+    final voiture = json['voiture'];
+    if (voiture == null || voiture is! Map<String, dynamic>) {
+      throw FormatException(
+        "Le Json est invalide : voiture doit être de type Map dans $json",
+      );
+    }
+
+    final temps = json['temps'];
+    if (temps == null || temps is! List) {
+      throw FormatException(
+        "Le Json est invalide : temps doit être de type List dans $json",
+      );
+    }
+
+    return VoiturePerformance(
+      voiture: Voiture.fromJson(voiture),
+      temps: temps.cast<String>().toList(),
+    );
+  }
+
   int tempsEnMs(String temps) {
     final minutesEtRestes = temps.split(":");
     final secondesEtMs = minutesEtRestes[1].split(".");
@@ -31,9 +52,9 @@ class VoiturePerformance {
   String get meilleurTemps {
     String meilleurTour = temps.first;
 
-    for (final t in temps) {
-      if (tempsEnMs(t) < tempsEnMs(meilleurTour)) {
-        meilleurTour = t;
+    for (final tour in temps) {
+      if (tempsEnMs(tour) < tempsEnMs(meilleurTour)) {
+        meilleurTour = tour;
       }
     }
     return meilleurTour;
@@ -49,5 +70,25 @@ class VoiturePerformance {
     }
 
     return ((depart - actuel) / (depart - cible)).clamp(0.0, 1.0);
+  }
+
+  int get moyenneEnMs {
+    int total = 0;
+    for (final tour in temps) {
+      total += tempsEnMs(tour);
+    }
+    return (total / temps.length).round();
+  }
+
+  int get indexMeilleurTemps {
+    return temps.indexOf(meilleurTemps);
+  }
+
+  String formaterTemps(int ms) {
+    final minutes = (ms / 60000).floor();
+    final secondes = ((ms % 60000) / 1000).round();
+    final millisecondes = ms % 1000;
+
+    return "$minutes:${secondes.toString().padLeft(2, '0')}.${millisecondes.toString().padLeft(3, '0')}";
   }
 }
